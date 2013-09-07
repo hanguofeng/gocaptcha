@@ -13,21 +13,20 @@ import (
 	"time"
 )
 
-const (
-	GC_PROBABILITY = 1
-	GC_DIVISOR     = 100
-)
-
 type CStore struct {
-	mu          sync.RWMutex
-	data        map[string]*CaptchaInfo
-	expiresTime time.Duration
+	mu            sync.RWMutex
+	data          map[string]*CaptchaInfo
+	expiresTime   time.Duration
+	gcProbability int
+	gcDivisor     int
 }
 
-func CreateCStore(expiresTime time.Duration) *CStore {
+func CreateCStore(expiresTime time.Duration, gcProbability int, gcDivisor int) *CStore {
 	store := new(CStore)
 	store.data = make(map[string]*CaptchaInfo)
 	store.expiresTime = expiresTime
+	store.gcProbability = gcProbability
+	store.gcDivisor = gcDivisor
 
 	return store
 }
@@ -63,8 +62,9 @@ func (store *CStore) Destroy(key string) {
 }
 
 func (store *CStore) gcWrapper() {
+
 	//run PROBABILITY
-	if rnd(0, GC_DIVISOR) == GC_PROBABILITY {
+	if rnd(0, store.gcDivisor) == store.gcProbability {
 		go store.gc()
 	}
 }

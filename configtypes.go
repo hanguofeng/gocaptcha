@@ -10,6 +10,8 @@ import (
 
 type CaptchaConfig struct {
 	CaptchaLifeTime time.Duration
+	GcProbability   int
+	GcDivisor       int
 }
 
 type FilterConfig struct {

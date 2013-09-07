@@ -51,6 +51,8 @@ func loadConfig() (*CaptchaConfig, *ImageConfig, *FilterConfig) {
 
 	captchaConfig := new(CaptchaConfig)
 	captchaConfig.CaptchaLifeTime = 1000
+	captchaConfig.GcProbability = 1
+	captchaConfig.GcDivisor = 100
 
 	imageConfig := new(ImageConfig)
 	imageConfig.FontFiles = []string{

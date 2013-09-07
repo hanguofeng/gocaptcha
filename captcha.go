@@ -21,7 +21,7 @@ type Captcha struct {
 
 func CreateCaptcha(wordManager *WordManager, captchaConfig *CaptchaConfig, imageConfig *ImageConfig, filterConfig *FilterConfig) *Captcha {
 	captcha := new(Captcha)
-	captcha.store = CreateCStore(captchaConfig.CaptchaLifeTime)
+	captcha.store = CreateCStore(captchaConfig.CaptchaLifeTime, captchaConfig.GcProbability, captchaConfig.GcDivisor)
 	captcha.wordManager = wordManager
 	captcha.captchaConfig = captchaConfig
 	captcha.imageConfig = imageConfig

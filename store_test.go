@@ -10,7 +10,7 @@ import (
 )
 
 func TestStore(t *testing.T) {
-	store := CreateCStore(10 * time.Second) //10 s
+	store := CreateCStore(10*time.Second, 1, 100) //10 s
 
 	captcha := new(CaptchaInfo)
 	captcha.text = "hello"
