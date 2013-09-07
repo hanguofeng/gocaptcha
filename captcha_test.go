@@ -10,6 +10,7 @@ import (
 	"os"
 	"runtime"
 	"testing"
+	"time"
 )
 
 func TestCaptcha(t *testing.T) {
@@ -50,7 +51,7 @@ func TestCaptcha(t *testing.T) {
 func loadConfig() (*CaptchaConfig, *ImageConfig, *FilterConfig) {
 
 	captchaConfig := new(CaptchaConfig)
-	captchaConfig.CaptchaLifeTime = 1000
+	captchaConfig.CaptchaLifeTime = 10 * time.Second
 	captchaConfig.GcProbability = 1
 	captchaConfig.GcDivisor = 100
 
