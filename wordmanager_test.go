@@ -15,7 +15,7 @@ func TestWordManager(t *testing.T) {
 	if (nil != err) || "" == pwd {
 		return
 	}
-	path := pwd + "/data\\/"
+	path := pwd + "/data/"
 	singleCharDict := []string{"cn_char", "en_char"}
 	phrasesDict := []string{"cn_phrases", "en_phrases"}
 	length := 6
