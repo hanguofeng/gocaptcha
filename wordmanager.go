@@ -13,11 +13,13 @@ import (
 	"unicode/utf8"
 )
 
+//WordManager is a captcha word manage tool
 type WordManager struct {
 	words            []string
 	isDataSingleChar bool
 }
 
+//Get a specifical length word
 func (mgr *WordManager) Get(length int) string {
 
 	rst := ""
@@ -36,8 +38,8 @@ func (mgr *WordManager) Get(length int) string {
 			}
 		}
 
-		rst_rune := []rune(rst)
-		rst = string(rst_rune[0:length])
+		rstRune := []rune(rst)
+		rst = string(rstRune[0:length])
 	} else {
 		rst = mgr.getLine()
 	}
@@ -53,6 +55,7 @@ func (mgr *WordManager) getLine() string {
 	return rst
 }
 
+//LoadFromFile is the loader func of word manager
 func (mgr *WordManager) LoadFromFile(filename string) error {
 	mgr.words = []string{}
 	f, err := os.Open(filename)

@@ -17,6 +17,7 @@ const (
 	colorCount = 20
 )
 
+//CImage is a image process tool
 type CImage struct {
 	*image.Paletted
 	config *ImageConfig
@@ -103,6 +104,7 @@ func (m *CImage) drawString(text string) *CImage {
 	return m
 }
 
+//CreateCImage will create a CImage struct with config
 func CreateCImage(config *ImageConfig) *CImage {
 	r := new(CImage)
 	r.Paletted = image.NewPaletted(image.Rect(0, 0, config.Width, config.Height), randomPalette())

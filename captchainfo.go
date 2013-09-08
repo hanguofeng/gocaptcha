@@ -8,7 +8,10 @@ import (
 	"time"
 )
 
+// CaptchaInfo is the entity of a captcha
+// text:the content text,for the image display and user to recognize
+// createTime:the time when the captcha is created
 type CaptchaInfo struct {
-	text       string
-	createTime time.Time
+	Text       string
+	CreateTime time.Time
 }

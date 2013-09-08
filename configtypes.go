@@ -8,12 +8,14 @@ import (
 	"time"
 )
 
+//CaptchaConfig ,the captcha config
 type CaptchaConfig struct {
 	CaptchaLifeTime time.Duration
 	GcProbability   int
 	GcDivisor       int
 }
 
+//FilterConfig ,the filter config
 type FilterConfig struct {
 	EnableStrike     bool
 	EnableNoisePoint bool
@@ -23,6 +25,7 @@ type FilterConfig struct {
 	NoiseLineNum     int
 }
 
+//ImageConfig ,the image config
 type ImageConfig struct {
 	Width       int
 	Height      int

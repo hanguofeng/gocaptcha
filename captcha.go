@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+//Captcha is the core captcha struct
 type Captcha struct {
 	store       *CStore
 	wordManager *WordManager
@@ -19,6 +20,7 @@ type Captcha struct {
 	filterConfig  *FilterConfig
 }
 
+//CreateCaptcha is a method to create new Captcha struct
 func CreateCaptcha(wordManager *WordManager, captchaConfig *CaptchaConfig, imageConfig *ImageConfig, filterConfig *FilterConfig) *Captcha {
 	captcha := new(Captcha)
 	captcha.store = CreateCStore(captchaConfig.CaptchaLifeTime, captchaConfig.GcProbability, captchaConfig.GcDivisor)
@@ -30,36 +32,38 @@ func CreateCaptcha(wordManager *WordManager, captchaConfig *CaptchaConfig, image
 	return captcha
 }
 
+//GetKey will generate a key with required length
 func (captcha *Captcha) GetKey(length int) string {
 	text := captcha.wordManager.Get(length)
 	info := new(CaptchaInfo)
-	info.text = text
-	info.createTime = time.Now()
+	info.Text = text
+	info.CreateTime = time.Now()
 
 	rst := captcha.store.Add(info)
 	return rst
 }
 
+//Verify will verify the user's input and the server stored captcha text
 func (captcha *Captcha) Verify(key, textToVerify string) (bool, string) {
 	info := captcha.store.Get(key)
 	if nil == info {
 		return false, "captcha info not found"
 	}
 
-	if info.createTime.Add(captcha.captchaConfig.CaptchaLifeTime).Before(time.Now()) {
+	if info.CreateTime.Add(captcha.captchaConfig.CaptchaLifeTime).Before(time.Now()) {
 		return false, "captcha expires"
 	}
 
-	if info.text != textToVerify {
+	if info.Text != textToVerify {
 		return false, "captcha text not match"
-	} else {
-		captcha.store.Del(key)
-		return true, ""
 	}
+	captcha.store.Del(key)
+	return true, ""
 
 	return false, "not reachable"
 }
 
+//GetImage will generate the binary image data
 func (captcha *Captcha) GetImage(key string) (image.Image, error) {
 
 	info := captcha.store.Get(key)
@@ -67,11 +71,11 @@ func (captcha *Captcha) GetImage(key string) (image.Image, error) {
 		return nil, errors.New("captcha info not found")
 	}
 
-	if info.createTime.Add(captcha.captchaConfig.CaptchaLifeTime).Before(time.Now()) {
+	if info.CreateTime.Add(captcha.captchaConfig.CaptchaLifeTime).Before(time.Now()) {
 		return nil, errors.New("captcha expires")
 	}
 
-	cimg := captcha.genImage(info.text)
+	cimg := captcha.genImage(info.Text)
 	return cimg, nil
 
 }
