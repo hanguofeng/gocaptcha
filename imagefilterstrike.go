@@ -11,6 +11,7 @@ type ImageFilterStrike struct {
 	StrikeLineNum int
 }
 
-func (filter *ImageFilterStrike) proc(cimage *CImage) {
+//Proc the image
+func (filter *ImageFilterStrike) Proc(cimage *CImage) {
 	cimage.strikeThrough(filter.StrikeLineNum)
 }

@@ -85,21 +85,13 @@ func (captcha *Captcha) genImage(text string) *CImage {
 	cimg := CreateCImage(captcha.imageConfig)
 	cimg.drawString(text)
 
-	if captcha.filterConfig.EnableStrike {
-		cimg.strikeThrough(captcha.filterConfig.StrikeLineNum)
-	}
+	filtermanager := CreateImageFilterManager()
+	filtermanager.AddFilter(&ImageFilterStrike{StrikeLineNum: captcha.filterConfig.StrikeLineNum})
+	filtermanager.AddFilter(&ImageFilterNoisePoint{NoisePointNum: captcha.filterConfig.NoisePointNum})
+	filtermanager.AddFilter(&ImageFilterNoiseLine{NoiseLineNum: captcha.filterConfig.NoiseLineNum})
 
-	if captcha.filterConfig.EnableNoisePoint {
-		for i := 0; i < captcha.filterConfig.NoisePointNum; i++ {
-			cimg.drawCircle(rnd(0, captcha.imageConfig.Width), rnd(0, captcha.imageConfig.Height), rnd(0, 2), uint8(rnd(1, colorCount)))
-		}
-	}
-
-	if captcha.filterConfig.EnableNoiseLine {
-		for i := 0; i < captcha.filterConfig.NoiseLineNum; i++ {
-			x := rnd(0, captcha.imageConfig.Width)
-			cimg.drawHorizLine(int(float32(x)/1.5), x, rnd(0, captcha.imageConfig.Height), uint8(rnd(1, colorCount)))
-		}
+	for _, filter := range filtermanager.GetFilters() {
+		filter.Proc(cimg)
 	}
 
 	return cimg

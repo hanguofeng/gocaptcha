@@ -8,5 +8,5 @@ import ()
 
 //ImageFilter is the interface of image filter
 type ImageFilter interface {
-	proc(cimage *CImage)
+	Proc(cimage *CImage)
 }
