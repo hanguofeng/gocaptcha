@@ -5,6 +5,7 @@
 package gocaptcha
 
 import (
+	"os"
 	"testing"
 	"time"
 )
@@ -35,6 +36,8 @@ func TestStore(t *testing.T) {
 	if captcha.Text != retV.Text {
 		t.Errorf("LoadDumped error")
 	}
+
+	os.Remove("data/data.dat")
 
 	//test del
 	store.Del(key)

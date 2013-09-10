@@ -10,3 +10,11 @@ import ()
 type ImageFilter interface {
 	Proc(cimage *CImage)
 }
+
+//ImageFilter is the base class of image filter
+type ImageFilterBase struct {
+}
+
+func (filter *ImageFilterBase) Proc(cimage *CImage) {
+	panic("not impl")
+}

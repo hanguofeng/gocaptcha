@@ -8,6 +8,7 @@ import ()
 
 //ImageFilter is the interface of image filter
 type ImageFilterNoiseLine struct {
+	*ImageFilterBase
 	NoiseLineNum int
 }
 
