@@ -4,15 +4,18 @@ View in [[English](README-en.md)][[中文](README.md)]
 # gocaptcha
 Captcha server writen in golang
 
+[![Build Status](https://travis-ci.org/hanguofeng/gocaptcha.png?branch=master)](https://travis-ci.org/hanguofeng/gocaptcha)
+
 Feature
 -------
 * supports captcha char in Chinese
 * supports self-define word/char dictionary
-* supports filter
+* supports filter plugin
 * filters：
 	* noise point
 	* noise line
 	* other type of noise
+	* plugin
 
 Useage
 ------
@@ -30,7 +33,6 @@ See [captcha_test.go](captcha_test.go)
 
 TODO
 ----
-* self-define filter plugin
 * support deployment in stand-alone or cluster
 * ops tools
 
