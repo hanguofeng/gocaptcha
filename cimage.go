@@ -10,7 +10,6 @@ import (
 	"image/color"
 	"image/draw"
 	"log"
-	"math"
 )
 
 const (
@@ -61,25 +60,6 @@ func (m *CImage) drawCircle(x, y, radius int, colorIdx uint8) {
 		m.drawHorizLine(x-yo, x+yo, y+xo, colorIdx)
 		m.drawHorizLine(x-yo, x+yo, y-xo, colorIdx)
 	}
-}
-
-func (m *CImage) strikeThrough(lineNum int) *CImage {
-	maxx := m.Bounds().Max.X
-	maxy := m.Bounds().Max.Y
-	y := rnd(maxy/2, maxy-maxy/2)
-	amplitude := rndf(10, 15)
-	period := rndf(80, 100)
-	dx := 2.0 * math.Pi / period
-	for x := 0; x < maxx; x++ {
-		xo := amplitude * math.Cos(float64(y)*dx)
-		yo := amplitude * math.Sin(float64(x)*dx)
-		for yn := 0; yn < lineNum; yn++ {
-			r := rnd(0, 2)
-			m.drawCircle(x+int(xo), y+int(yo)+(yn*(lineNum+1)), r/2, 1)
-		}
-	}
-
-	return m
 }
 
 func (m *CImage) drawString(text string) *CImage {
