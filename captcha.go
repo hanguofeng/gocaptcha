@@ -12,7 +12,7 @@ import (
 
 //Captcha is the core captcha struct
 type Captcha struct {
-	store       *CStore
+	store       StoreInterface
 	wordManager *WordManager
 
 	captchaConfig *CaptchaConfig
