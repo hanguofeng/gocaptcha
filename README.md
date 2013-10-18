@@ -40,3 +40,7 @@ LICENCE
 -------
 gocaptcha使用[[MIT许可协议](LICENSE)]
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/hanguofeng/gocaptcha/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
