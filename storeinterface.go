@@ -12,6 +12,6 @@ type StoreInterface interface {
 	Add(captcha *CaptchaInfo) string
 	Del(key string)
 	Destroy()
-	Dump(file string)
-	LoadDumped(file string)
+	OnConstruct()
+	OnDestruct()
 }

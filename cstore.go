@@ -71,6 +71,16 @@ func (store *CStore) Destroy() {
 	}
 }
 
+//OnConstruct load data
+func (store *CStore) OnConstruct() {
+
+}
+
+//OnDestruct dump data
+func (store *CStore) OnDestruct() {
+
+}
+
 //Dump the whole store
 func (store *CStore) Dump(file string) {
 	store.mu.Lock()
