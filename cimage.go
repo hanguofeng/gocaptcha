@@ -5,11 +5,11 @@
 package gocaptcha
 
 import (
-	"code.google.com/p/freetype-go/freetype"
 	"image"
 	"image/color"
 	"image/draw"
-	"log"
+
+	"code.google.com/p/freetype-go/freetype"
 )
 
 const (
@@ -24,9 +24,7 @@ type CImage struct {
 
 func (m *CImage) drawHorizLine(fromX, toX, y int, colorIdx uint8) *CImage {
 	if 0 >= colorIdx || colorIdx > colorCount {
-		log.Printf("[warning]colorIdx overflow(%d)", colorIdx)
 		colorIdx = uint8(rnd(0, colorCount))
-		log.Println("[warning]auto correct colorIdx")
 	}
 	for x := fromX; x <= toX; x++ {
 		m.SetColorIndex(x, y, colorIdx)

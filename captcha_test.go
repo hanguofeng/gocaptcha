@@ -6,7 +6,6 @@ package gocaptcha
 
 import (
 	"image/png"
-	"log"
 	"os"
 	"runtime"
 	"testing"
@@ -35,17 +34,90 @@ func TestCaptcha(t *testing.T) {
 	captcha := CreateCaptcha(wordmgr, captchaConfig, imageConfig, filterConfig)
 	key := captcha.GetKey(4)
 	img, err := captcha.GetImage(key)
-	log.Println(err)
 	captcha.Verify(key, "用户输入")
 
 	err = os.Mkdir(pwd+"/_test_files/", os.ModeDir)
-	log.Println(err)
 	f, err := os.Create(pwd + "/_test_files/hanguofeng.png")
-	log.Println(err)
 	defer f.Close()
 	png.Encode(f, img)
 	f.Close()
 
+}
+
+func BenchmarkCaptcha(t *testing.B) {
+	var err error
+
+	if "windows" != runtime.GOOS {
+		return
+	}
+
+	pwd, err := os.Getwd()
+	if (nil != err) || "" == pwd {
+		return
+	}
+
+	path := pwd + "/data/cn_phrases"
+	wordmgr := new(WordManager)
+	wordmgr.LoadFromFile(path)
+
+	captchaConfig, imageConfig, filterConfig := loadConfig()
+
+	for i := 0; i < t.N; i++ {
+		ccaptcha := CreateCaptcha(wordmgr, captchaConfig, imageConfig, filterConfig)
+		s := ccaptcha.GetKey(4)
+		ccaptcha.GetImage(s)
+		ccaptcha.Verify(s, "ssss")
+	}
+}
+
+func BenchmarkCaptchaInternalAPI(t *testing.B) {
+	var err error
+
+	if "windows" != runtime.GOOS {
+		return
+	}
+
+	pwd, err := os.Getwd()
+	if (nil != err) || "" == pwd {
+		return
+	}
+
+	path := pwd + "/data/cn_phrases"
+	wordmgr := new(WordManager)
+	wordmgr.LoadFromFile(path)
+
+	captchaConfig, imageConfig, filterConfig := loadConfig()
+
+	for i := 0; i < t.N; i++ {
+		ccaptcha := CreateCaptcha(wordmgr, captchaConfig, imageConfig, filterConfig)
+		s := ccaptcha.GetKey(4)
+		ccaptcha.Verify(s, "ssss")
+	}
+}
+
+func BenchmarkCaptchaDrawImage(t *testing.B) {
+	var err error
+
+	if "windows" != runtime.GOOS {
+		return
+	}
+
+	pwd, err := os.Getwd()
+	if (nil != err) || "" == pwd {
+		return
+	}
+
+	path := pwd + "/data/cn_phrases"
+	wordmgr := new(WordManager)
+	wordmgr.LoadFromFile(path)
+
+	captchaConfig, imageConfig, filterConfig := loadConfig()
+
+	for i := 0; i < t.N; i++ {
+		ccaptcha := CreateCaptcha(wordmgr, captchaConfig, imageConfig, filterConfig)
+		s := ccaptcha.GetKey(4)
+		ccaptcha.GetImage(s)
+	}
 }
 
 func loadConfig() (*CaptchaConfig, *ImageConfig, *FilterConfig) {

@@ -7,7 +7,6 @@ import (
 	"image/png"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/hanguofeng/config"
@@ -69,18 +68,11 @@ func DoVerify(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-
-	log.Printf("configFile:%s", *configFile)
-
-	pwd, err := os.Getwd()
-	if (nil != err) || "" == pwd {
-		return
-	}
-	path := pwd + "/../../data/en_phrases"
+	wordDict, captchaConfig, imageConfig, filterConfig := loadConfigFromFile()
 
 	wordmgr := new(gocaptcha.WordManager)
-	wordmgr.LoadFromFile(path)
-	captchaConfig, imageConfig, filterConfig := loadConfigFromFile()
+	wordmgr.LoadFromFile(wordDict)
+
 	ccaptcha = gocaptcha.CreateCaptcha(wordmgr, captchaConfig, imageConfig, filterConfig)
 
 	http.HandleFunc("/getimage", ShowImageHandler)
@@ -92,10 +84,16 @@ func main() {
 	log.Fatal(s.ListenAndServe())
 }
 
-func loadConfigFromFile() (*gocaptcha.CaptchaConfig, *gocaptcha.ImageConfig, *gocaptcha.FilterConfig) {
-	c, err := config.ReadDefault(*configFile)
-	log.Printf("config:%s,err:%s", c, err)
+func loadConfigFromFile() (string, *gocaptcha.CaptchaConfig, *gocaptcha.ImageConfig, *gocaptcha.FilterConfig) {
 
+	c, err := config.ReadDefault(*configFile)
+	//log.Printf("config:%s,err:%s", c, err)
+
+	//wordDict
+	wordDict, err := c.String("captcha", "word_dict")
+	if nil != err {
+		log.Printf("load dict failed:%s", err.Error())
+	}
 	//captchaConfig
 	captchaConfig := new(gocaptcha.CaptchaConfig)
 	var lifeTime time.Duration
@@ -158,11 +156,9 @@ func loadConfigFromFile() (*gocaptcha.CaptchaConfig, *gocaptcha.ImageConfig, *go
 	filterConfig.EnableNoiseLine = true
 	filterConfig.EnableNoisePoint = true
 	filterConfig.EnableStrike = true
-	filterConfig.StrikeLineNum = 3
-	filterConfig.NoisePointNum = 30
-	filterConfig.NoiseLineNum = 10
+	filterConfig.StrikeLineNum = 2
+	filterConfig.NoisePointNum = 20
+	filterConfig.NoiseLineNum = 4
 
-	log.Printf("imageConfig:%s", imageConfig)
-
-	return captchaConfig, imageConfig, filterConfig
+	return wordDict, captchaConfig, imageConfig, filterConfig
 }

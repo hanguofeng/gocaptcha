@@ -6,14 +6,12 @@ package gocaptcha
 
 import (
 	"crypto/md5"
+	enc "encoding/gob"
 	"encoding/hex"
 	"fmt"
-	"log"
+	"os"
 	"sync"
 	"time"
-
-	enc "encoding/gob"
-	"os"
 )
 
 //CStore is the Captcha info store service
@@ -82,7 +80,7 @@ func (store *CStore) OnDestruct() {
 }
 
 //Dump the whole store
-func (store *CStore) Dump(file string) {
+func (store *CStore) Dump(file string) error {
 	store.mu.Lock()
 	defer store.mu.Unlock()
 
@@ -96,20 +94,22 @@ func (store *CStore) Dump(file string) {
 			f.Close()
 
 			if nil == err {
-				log.Println("Dump encoded", store)
+				return err
 			} else {
-				log.Fatalln("[Store Dump Err]", err)
+				return nil
 			}
 		} else {
-			log.Fatalln("[Store Dump Err]", err)
+			return err
 		}
 	} else {
-		log.Fatalln("[Store Dump Err]", err)
+		return err
 	}
+
+	return nil
 }
 
 //LoadDumped file to store
-func (store *CStore) LoadDumped(file string) {
+func (store *CStore) LoadDumped(file string) error {
 	data := &map[string]*CaptchaInfo{}
 	pwd, err := os.Getwd()
 
@@ -121,22 +121,23 @@ func (store *CStore) LoadDumped(file string) {
 			f.Close()
 
 			if nil == err {
-				log.Println("LoadDumped decode", *data)
 				store.data = *data
+				return nil
+
 			} else {
-				log.Fatalln("[Store LoadDumped Err]", err)
+				return err
 			}
 
 		} else {
-			log.Fatalln("[Store LoadDumped Err]", err)
+			return err
 		}
 	} else {
-		log.Fatalln("[Store LoadDumped Err]", err)
+		return err
 	}
+	return err
 }
 
 func (store *CStore) gcWrapper() {
-
 	//run PROBABILITY
 	if rnd(0, store.gcDivisor) == store.gcProbability {
 		go store.gc()
@@ -146,7 +147,6 @@ func (store *CStore) gcWrapper() {
 func (store *CStore) gc() {
 	for key, val := range store.data {
 		if val.CreateTime.Add(store.expiresTime).Before(time.Now()) {
-			log.Println("collecting:" + key)
 			store.Del(key)
 		}
 	}

@@ -5,7 +5,6 @@
 package gocaptcha
 
 import (
-	"log"
 	"os"
 	"testing"
 )
@@ -23,15 +22,13 @@ func TestWordManager(t *testing.T) {
 	for _, f := range singleCharDict {
 		mgr.LoadFromFile(path + f)
 		s := mgr.Get(length)
-		log.Println(s)
 		if length != len([]rune(s)) {
 			t.Errorf("get no equals length:" + f)
 		}
 	}
 	for _, f := range phrasesDict {
 		mgr.LoadFromFile(path + f)
-		s := mgr.Get(length)
-		log.Println(s)
+		mgr.Get(length)
 	}
 
 }
