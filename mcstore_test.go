@@ -25,6 +25,8 @@ func TestMCStore(t *testing.T) {
 		t.Errorf("not equal,retV:%s,captcha:%s", retV, captcha)
 	}
 
+	t.Logf("TestMCStore:get from mc:%s", retV)
+
 	//test del
 	store.Del(key)
 	retV = store.Get(key)
