@@ -17,14 +17,16 @@ import (
 	"github.com/bradfitz/gomemcache/memcache"
 )
 
-//CStore is the Captcha info store service
+//MCStore is the Captcha info store service
 type MCStore struct {
-	mc *memcache.Client
+	engine string
+	mc     *memcache.Client
 }
 
 //CreateCStore will create a new CStore
 func CreateMCStore(expiresTime time.Duration, servers []string) *MCStore {
 	store := new(MCStore)
+
 	store.mc = memcache.New(servers...)
 	store.mc.Timeout = expiresTime
 

@@ -16,6 +16,7 @@ import (
 
 //CStore is the Captcha info store service
 type CStore struct {
+	engine        string
 	mu            sync.RWMutex
 	data          map[string]*CaptchaInfo
 	expiresTime   time.Duration
@@ -26,6 +27,7 @@ type CStore struct {
 //CreateCStore will create a new CStore
 func CreateCStore(expiresTime time.Duration, gcProbability int, gcDivisor int) *CStore {
 	store := new(CStore)
+	store.engine = STORE_ENGINE_BUILDIN
 	store.data = make(map[string]*CaptchaInfo)
 	store.expiresTime = expiresTime
 	store.gcProbability = gcProbability

@@ -10,10 +10,8 @@ import (
 )
 
 func TestMCStore(t *testing.T) {
-	return //skip this test
-
 	memcacheServers := []string{"127.0.0.1:11211"}
-	store := CreateMCStore(10*time.Second, memcacheServers) //10 s
+	store := CreateMCStore(100*time.Second, memcacheServers) //100 s
 
 	captcha := new(CaptchaInfo)
 	captcha.Text = "hello"

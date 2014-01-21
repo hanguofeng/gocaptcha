@@ -14,10 +14,12 @@ import (
 )
 
 const (
-	DEFAULT_LIFE_TIME = time.Minute * 5
-	DEFAULT_FONT_SIZE = 26
-	DEFAULT_WIDTH     = 120
-	DEFAULT_HEIGHT    = 40
+	DEFAULT_LIFE_TIME      = time.Minute * 5
+	DEFAULT_FONT_SIZE      = 26
+	DEFAULT_WIDTH          = 120
+	DEFAULT_HEIGHT         = 40
+	DEFAULT_GC_PROBABILITY = 1
+	DEFAULT_GC_DIVISOR     = 100
 )
 
 var (
@@ -68,13 +70,12 @@ func DoVerify(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	wordDict, captchaConfig, imageConfig, filterConfig := loadConfigFromFile()
+	wordDict, captchaConfig, imageConfig, filterConfig, storeConfig := loadConfigFromFile(*configFile)
 
 	wordmgr := new(gocaptcha.WordManager)
 	wordmgr.LoadFromFile(wordDict)
 
-	ccaptcha = gocaptcha.CreateCaptcha(wordmgr, captchaConfig, imageConfig, filterConfig)
-
+	ccaptcha = gocaptcha.CreateCaptcha(wordmgr, captchaConfig, imageConfig, filterConfig, storeConfig)
 	http.HandleFunc("/getimage", ShowImageHandler)
 	http.HandleFunc("/getkey", ShowKey)
 	http.HandleFunc("/verify", DoVerify)
@@ -84,10 +85,9 @@ func main() {
 	log.Fatal(s.ListenAndServe())
 }
 
-func loadConfigFromFile() (string, *gocaptcha.CaptchaConfig, *gocaptcha.ImageConfig, *gocaptcha.FilterConfig) {
+func loadConfigFromFile(configFile string) (string, *gocaptcha.CaptchaConfig, *gocaptcha.ImageConfig, *gocaptcha.FilterConfig, *gocaptcha.StoreConfig) {
 
-	c, err := config.ReadDefault(*configFile)
-	//log.Printf("config:%s,err:%s", c, err)
+	c, err := config.ReadDefault(configFile)
 
 	//wordDict
 	wordDict, err := c.String("captcha", "word_dict")
@@ -109,7 +109,7 @@ func loadConfigFromFile() (string, *gocaptcha.CaptchaConfig, *gocaptcha.ImageCon
 		lifeTime = DEFAULT_LIFE_TIME
 	}
 
-	captchaConfig.CaptchaLifeTime = lifeTime
+	captchaConfig.LifeTime = lifeTime
 
 	//imageConfig
 	imageConfig := new(gocaptcha.ImageConfig)
@@ -160,5 +160,36 @@ func loadConfigFromFile() (string, *gocaptcha.CaptchaConfig, *gocaptcha.ImageCon
 	filterConfig.NoisePointNum = 20
 	filterConfig.NoiseLineNum = 4
 
-	return wordDict, captchaConfig, imageConfig, filterConfig
+	//storeConfig
+	storeConfig := new(gocaptcha.StoreConfig)
+
+	engine, err := c.String("store", "engine")
+	if nil == err {
+		storeConfig.Engine = engine
+	} else {
+		log.Fatalf("Parse Store Config fatal,%s", err)
+	}
+
+	servers, err := c.StringMuti("store", "servers")
+	if nil != err {
+		storeConfig.Servers = servers
+	} else {
+		storeConfig.Servers = []string{}
+	}
+
+	gcProbability, err := c.Int("store", "gc_probability")
+	if nil != err {
+		storeConfig.GcProbability = gcProbability
+	} else {
+		storeConfig.GcProbability = DEFAULT_GC_PROBABILITY
+	}
+
+	gcDivisor, err := c.Int("store", "gc_divisor")
+	if nil != err {
+		storeConfig.GcDivisor = gcDivisor
+	} else {
+		storeConfig.GcDivisor = DEFAULT_GC_DIVISOR
+	}
+
+	return wordDict, captchaConfig, imageConfig, filterConfig, storeConfig
 }

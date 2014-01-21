@@ -10,9 +10,7 @@ import (
 
 //CaptchaConfig ,the captcha config
 type CaptchaConfig struct {
-	CaptchaLifeTime time.Duration
-	GcProbability   int
-	GcDivisor       int
+	LifeTime time.Duration
 }
 
 //FilterConfig ,the filter config
@@ -32,4 +30,16 @@ type ImageConfig struct {
 	FontSize    float64
 	FontFiles   []string
 	fontManager *FontManager
+}
+
+const STORE_ENGINE_BUILDIN = "buildin"
+const STORE_ENGINE_MEMCACHE = "memcache"
+
+//StoreConfig ,the store engine config
+type StoreConfig struct {
+	CaptchaConfig
+	Engine        string
+	Servers       []string
+	GcProbability int
+	GcDivisor     int
 }
