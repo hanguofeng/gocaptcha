@@ -6,6 +6,7 @@ package gocaptcha
 
 import (
 	"encoding/csv"
+	"errors"
 	"io"
 	"os"
 	"strings"
@@ -16,50 +17,18 @@ import (
 type WordManager struct {
 	words            []string
 	isDataSingleChar bool
+	isValid          bool
 }
 
-//Get a specifical length word
-func (mgr *WordManager) Get(length int) string {
-
-	rst := ""
-	if true == mgr.isDataSingleChar {
-		if len(mgr.words) < length {
-			panic("dict words count is less than your length")
-		}
-
-		for {
-			line := mgr.getLine()
-			if false == strings.ContainsRune(rst, []rune(line)[0]) {
-				rst = rst + line
-			}
-			if utf8.RuneCountInString(rst) >= length {
-				break
-			}
-		}
-
-		rstRune := []rune(rst)
-		rst = string(rstRune[0:length])
-	} else {
-		rst = mgr.getLine()
-	}
-
-	return rst
-}
-
-func (mgr *WordManager) getLine() string {
-	maxIndex := len(mgr.words) - 1
-	rstIndex := rnd(0, maxIndex)
-	rst := mgr.words[rstIndex]
-
-	return rst
-}
-
-//LoadFromFile is the loader func of word manager
-func (mgr *WordManager) LoadFromFile(filename string) error {
+//CreateWordManagerFromDataFile will create a entity from a dictionary file
+func CreateWordManagerFromDataFile(filename string) (*WordManager, error) {
+	mgr := &WordManager{}
 	mgr.words = []string{}
+	mgr.isValid = false
+
 	f, err := os.Open(filename)
 	if nil != err {
-		panic("file not readable:" + err.Error())
+		return mgr, err
 	}
 	defer f.Close()
 	reader := csv.NewReader(f)
@@ -69,7 +38,7 @@ func (mgr *WordManager) LoadFromFile(filename string) error {
 		if err == io.EOF {
 			break
 		} else if nil != err {
-			return err
+			return mgr, err
 		}
 
 		if 1 < len([]rune(record[0])) {
@@ -79,5 +48,46 @@ func (mgr *WordManager) LoadFromFile(filename string) error {
 		mgr.words = append(mgr.words, strings.TrimSpace(record[0]))
 	}
 
-	return nil
+	mgr.isValid = true
+	return mgr, nil
+}
+
+//Get a specifical length word
+func (mgr *WordManager) Get(length int) (string, error) {
+	var retErr error
+	rst := ""
+	if mgr.isValid {
+		if true == mgr.isDataSingleChar {
+			if len(mgr.words) < length {
+				return "", errors.New("dict words count is less than your length")
+			}
+
+			for {
+				line := mgr.getLine()
+				if false == strings.ContainsRune(rst, []rune(line)[0]) {
+					rst = rst + line
+				}
+				if utf8.RuneCountInString(rst) >= length {
+					break
+				}
+			}
+
+			rstRune := []rune(rst)
+			rst = string(rstRune[0:length])
+		} else {
+			rst = mgr.getLine()
+		}
+	} else {
+		retErr = errors.New("WordManager is invalid")
+	}
+
+	return rst, retErr
+}
+
+func (mgr *WordManager) getLine() string {
+	maxIndex := len(mgr.words) - 1
+	rstIndex := rnd(0, maxIndex)
+	rst := mgr.words[rstIndex]
+
+	return rst
 }

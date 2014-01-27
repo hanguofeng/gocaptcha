@@ -16,6 +16,10 @@ Feature
 	* noise line
 	* other type of noise
 	* plugin
+* supports extensible store engine
+	* build-in store engine
+	* memcache
+	* implement your own by implement the StoreInterface
 
 Useage
 ------
@@ -27,16 +31,26 @@ Useage
 
 See [captcha_test.go](captcha_test.go)
 
+See [samples/http](samples/http)
+
 **Document**
 
 [[captcha.go Wiki](https://github.com/hanguofeng/gocaptcha/wiki)]
 
 TODO
 ----
-* support deployment in stand-alone or cluster
 * ops tools
 
 LICENCE
 -------
 gocaptcha use [[MIT LICENSE](LICENSE)]
 
+Thanks:
+
+* https://github.com/dchest/captcha
+* https://code.google.com/p/freetype-go/freetype
+* https://github.com/bradfitz/gomemcache
+* https://code.google.com/p/zpix/
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/hanguofeng/gocaptcha/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

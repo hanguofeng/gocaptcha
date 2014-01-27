@@ -22,36 +22,63 @@ type Captcha struct {
 }
 
 //CreateCaptcha is a method to create new Captcha struct
-func CreateCaptcha(wordManager *WordManager, captchaConfig *CaptchaConfig, imageConfig *ImageConfig, filterConfig *FilterConfig, storeConfig *StoreConfig) *Captcha {
+func CreateCaptcha(wordManager *WordManager, captchaConfig *CaptchaConfig, imageConfig *ImageConfig, filterConfig *FilterConfig, storeConfig *StoreConfig) (*Captcha, error) {
+	var retErr error
+
 	captcha := new(Captcha)
 
-	captcha.store = createStore(storeConfig)
-	captcha.wordManager = wordManager
+	store, err := createStore(storeConfig)
+	if nil == err {
+		captcha.store = store
+	} else {
+		retErr = err
+	}
+	if nil != wordManager {
+		captcha.wordManager = wordManager
+	} else {
+		retErr = errors.New("CreateCaptcha fail:invalid wordManager")
+	}
 	captcha.captchaConfig = captchaConfig
 	captcha.imageConfig = imageConfig
 	captcha.filterConfig = filterConfig
 
-	return captcha
+	return captcha, retErr
 }
 
 //CreateCaptchaFromConfigFile is a method to create new Captcha struct
-func CreateCaptchaFromConfigFile(configFile string) *Captcha {
-	wordDict, captchaConfig, imageConfig, filterConfig, storeConfig := loadConfigFromFile(configFile)
-	wordmgr := new(WordManager)
-	wordmgr.LoadFromFile(wordDict)
-	captcha := CreateCaptcha(wordmgr, captchaConfig, imageConfig, filterConfig, storeConfig)
+func CreateCaptchaFromConfigFile(configFile string) (*Captcha, error) {
+	var captcha *Captcha
+	var retErr error
 
-	return captcha
+	err, wordDict, captchaConfig, imageConfig, filterConfig, storeConfig := loadConfigFromFile(configFile)
+	if nil == err {
+
+		wordmgr, err := CreateWordManagerFromDataFile(wordDict)
+		if nil == err {
+			captcha, retErr = CreateCaptcha(wordmgr, captchaConfig, imageConfig, filterConfig, storeConfig)
+		} else {
+			retErr = err
+		}
+	} else {
+		retErr = err
+	}
+	return captcha, retErr
 }
 
 //GetKey will generate a key with required length
-func (captcha *Captcha) GetKey(length int) string {
-	text := captcha.wordManager.Get(length)
-	info := new(CaptchaInfo)
-	info.Text = text
-	info.CreateTime = time.Now()
-	rst := captcha.store.Add(info)
-	return rst
+func (captcha *Captcha) GetKey(length int) (string, error) {
+	var retErr error
+	var rst string
+	text, err := captcha.wordManager.Get(length)
+	if nil != err {
+		retErr = err
+	} else {
+		info := new(CaptchaInfo)
+		info.Text = text
+		info.CreateTime = time.Now()
+		rst = captcha.store.Add(info)
+	}
+	return rst, retErr
 }
 
 //Verify will verify the user's input and the server stored captcha text
@@ -90,8 +117,9 @@ func (captcha *Captcha) GetImage(key string) (image.Image, error) {
 	return cimg, nil
 
 }
-func createStore(config *StoreConfig) StoreInterface {
+func createStore(config *StoreConfig) (StoreInterface, error) {
 	var store StoreInterface
+	var err error
 
 	switch config.Engine {
 	case STORE_ENGINE_BUILDIN:
@@ -100,8 +128,10 @@ func createStore(config *StoreConfig) StoreInterface {
 	case STORE_ENGINE_MEMCACHE:
 		store = CreateMCStore(config.LifeTime, config.Servers)
 		break
+	default:
+		err = errors.New("Not supported engine:'" + config.Engine + "'")
 	}
-	return store
+	return store, err
 }
 
 func (captcha *Captcha) genImage(text string) *CImage {
