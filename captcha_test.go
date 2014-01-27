@@ -75,12 +75,22 @@ func loadConfig() (string, *CaptchaConfig, *ImageConfig, *FilterConfig, *StoreCo
 	imageConfig.Width = 120
 
 	filterConfig := new(FilterConfig)
-	filterConfig.EnableNoiseLine = true
-	filterConfig.EnableNoisePoint = true
-	filterConfig.EnableStrike = true
-	filterConfig.StrikeLineNum = 3
-	filterConfig.NoisePointNum = 30
-	filterConfig.NoiseLineNum = 10
+	filterConfig.Init()
+	filterConfig.Filters = []string{"ImageFilterNoiseLine", "ImageFilterNoisePoint", "ImageFilterStrike"}
+
+	var filterConfigGroup *FilterConfigGroup
+	filterConfigGroup = new(FilterConfigGroup)
+	filterConfigGroup.Init()
+	filterConfigGroup.SetItem("Num", "5")
+	filterConfig.SetGroup("ImageFilterNoiseLine", filterConfigGroup)
+	filterConfigGroup = new(FilterConfigGroup)
+	filterConfigGroup.Init()
+	filterConfigGroup.SetItem("Num", "10")
+	filterConfig.SetGroup("ImageFilterNoisePoint", filterConfigGroup)
+	filterConfigGroup = new(FilterConfigGroup)
+	filterConfigGroup.Init()
+	filterConfigGroup.SetItem("Num", "3")
+	filterConfig.SetGroup("ImageFilterStrike", filterConfigGroup)
 
 	storeConfig := new(StoreConfig)
 	storeConfig.Engine = STORE_ENGINE_BUILDIN

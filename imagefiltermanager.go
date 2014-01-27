@@ -24,3 +24,31 @@ func (manager *ImageFilterManager) AddFilter(filter ImageFilter) {
 func (manager *ImageFilterManager) GetFilters() []ImageFilter {
 	return manager.filters
 }
+
+func CreateImageFilterManagerByConfig(config *FilterConfig) *ImageFilterManager {
+	mgr := new(ImageFilterManager)
+	mgr.filters = []ImageFilter{}
+
+	filterClassMap := []ImageFilter{
+
+		new(ImageFilterNoiseLine),
+		new(ImageFilterNoisePoint),
+		new(ImageFilterStrike),
+	}
+
+	for _, classP := range filterClassMap {
+
+		for _, cfgId := range config.Filters {
+			if cfgId == classP.GetId() {
+				c, ok := config.GetGroup(cfgId)
+				if ok {
+					classP.SetConfig(c)
+					mgr.AddFilter(classP)
+				}
+			}
+		}
+
+	}
+
+	return mgr
+}

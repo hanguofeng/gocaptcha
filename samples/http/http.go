@@ -152,13 +152,20 @@ func loadConfigFromFile(configFile string) (string, *gocaptcha.CaptchaConfig, *g
 	imageConfig.Height = height
 
 	//filterConfig
-	filterConfig := new(gocaptcha.FilterConfig)
-	filterConfig.EnableNoiseLine = true
-	filterConfig.EnableNoisePoint = true
-	filterConfig.EnableStrike = true
-	filterConfig.StrikeLineNum = 2
-	filterConfig.NoisePointNum = 20
-	filterConfig.NoiseLineNum = 4
+	var filterConfigGroup *FilterConfigGroup
+	filterConfigGroup = new(FilterConfigGroup)
+	filterConfigGroup.Init()
+	filterConfigGroup.SetItem("Num", "5")
+	filterConfig.SetGroup("ImageFilterNoiseLine", filterConfigGroup)
+	filterConfigGroup = new(FilterConfigGroup)
+	filterConfigGroup.Init()
+	filterConfigGroup.SetItem("Num", "10")
+	filterConfig.SetGroup("ImageFilterNoisePoint", filterConfigGroup)
+	filterConfigGroup = new(FilterConfigGroup)
+	filterConfigGroup.Init()
+	filterConfigGroup.SetItem("Num", "3")
+	filterConfig.SetGroup("ImageFilterStrike", filterConfigGroup)
+	filterConfig.SetGroup("ImageFilterStrike", filterConfigGroup)
 
 	//storeConfig
 	storeConfig := new(gocaptcha.StoreConfig)
