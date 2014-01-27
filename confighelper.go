@@ -5,7 +5,7 @@
 package gocaptcha
 
 import (
-	"log"
+	"errors"
 	"strings"
 	"time"
 
@@ -21,14 +21,16 @@ const (
 	DEFAULT_GC_DIVISOR     = 100
 )
 
-func loadConfigFromFile(configFile string) (string, *CaptchaConfig, *ImageConfig, *FilterConfig, *StoreConfig) {
+func loadConfigFromFile(configFile string) (error, string, *CaptchaConfig, *ImageConfig, *FilterConfig, *StoreConfig) {
+
+	var retErr error
 
 	c, err := config.ReadDefault(configFile)
 
 	//wordDict
 	wordDict, err := c.String("captcha", "word_dict")
 	if nil != err {
-		log.Printf("load dict failed:%s", err.Error())
+		retErr = errors.New("loadConfigFromFile Fail,Get word_dict options failed:" + err.Error())
 	}
 	//captchaConfig
 	captchaConfig := new(CaptchaConfig)
@@ -39,7 +41,6 @@ func loadConfigFromFile(configFile string) (string, *CaptchaConfig, *ImageConfig
 		lifeTime, err = time.ParseDuration(cfgLifeTime)
 		if nil != err {
 			lifeTime = DEFAULT_LIFE_TIME
-			log.Printf("time.ParseDuration of config file failed,using default")
 		}
 	} else {
 		lifeTime = DEFAULT_LIFE_TIME
@@ -52,7 +53,7 @@ func loadConfigFromFile(configFile string) (string, *CaptchaConfig, *ImageConfig
 	var fontFiles []string
 	cfgFontFiles, err := c.StringMuti("image", "font_files")
 	if nil != err {
-		log.Fatalf("read config fail,font files:%s", err.Error())
+		retErr = errors.New("loadConfigFromFile Fail,font_files options failed:" + err.Error())
 	} else {
 		fontFiles = cfgFontFiles
 	}
@@ -116,10 +117,10 @@ func loadConfigFromFile(configFile string) (string, *CaptchaConfig, *ImageConfig
 	//storeConfig
 	storeConfig := new(StoreConfig)
 	engine, err := c.String("store", "engine")
-	if nil == err {
-		storeConfig.Engine = engine
+	if nil != err {
+		retErr = errors.New("loadConfigFromFile Fail,engine options failed" + err.Error())
 	} else {
-		log.Fatalf("Parse Store Config fatal,%s", err)
+		storeConfig.Engine = engine
 	}
 	servers, err := c.StringMuti("store", "servers")
 	if nil != err {
@@ -140,5 +141,9 @@ func loadConfigFromFile(configFile string) (string, *CaptchaConfig, *ImageConfig
 		storeConfig.GcDivisor = DEFAULT_GC_DIVISOR
 	}
 
-	return wordDict, captchaConfig, imageConfig, filterConfig, storeConfig
+	if nil != err && nil == retErr {
+		retErr = err
+	}
+
+	return retErr, wordDict, captchaConfig, imageConfig, filterConfig, storeConfig
 }

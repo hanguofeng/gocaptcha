@@ -18,17 +18,24 @@ func TestWordManager(t *testing.T) {
 	singleCharDict := []string{"cn_char", "en_char"}
 	phrasesDict := []string{"cn_phrases", "en_phrases"}
 	length := 6
-	mgr := new(WordManager)
+
 	for _, f := range singleCharDict {
-		mgr.LoadFromFile(path + f)
-		s := mgr.Get(length)
-		if length != len([]rune(s)) {
+		mgr, err := CreateWordManagerFromDataFile(path + f)
+		s, err := mgr.Get(length)
+		if nil != err {
+			t.Errorf(err.Error())
+		} else if length != len([]rune(s)) {
 			t.Errorf("get no equals length:" + f)
 		}
 	}
 	for _, f := range phrasesDict {
-		mgr.LoadFromFile(path + f)
-		mgr.Get(length)
+		mgr, err := CreateWordManagerFromDataFile(path + f)
+		s, err := mgr.Get(length)
+		if nil != err {
+			t.Errorf(err.Error())
+		} else if 0 >= len([]rune(s)) {
+			t.Errorf("not get:" + f)
+		}
 	}
 
 }

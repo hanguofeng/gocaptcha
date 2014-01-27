@@ -32,13 +32,22 @@ func ShowImageHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ShowKey(w http.ResponseWriter, r *http.Request) {
-	key := ccaptcha.GetKey(4)
-	w.Write([]byte(key))
+	key, err := ccaptcha.GetKey(4)
+	if nil != err {
+		w.Write([]byte(err.Error()))
+	} else {
+		w.Write([]byte(key))
+	}
 }
 
 func ShowPage(w http.ResponseWriter, r *http.Request) {
-	key := ccaptcha.GetKey(4)
-	page := "<html><body><form method=post action=/verify>key:<input name=key value=" + key + "><br>val:<input name=val><br><img src=/getimage?key=" + key + "><br><input type=submit value=go></form></body></html>"
+	var page string
+	key, err := ccaptcha.GetKey(4)
+	if nil != err {
+		page = err.Error()
+	} else {
+		page = "<html><body><form method=post action=/verify>key:<input name=key value=" + key + "><br>val:<input name=val><br><img src=/getimage?key=" + key + "><br><input type=submit value=go></form></body></html>"
+	}
 	w.Write([]byte(page))
 }
 
@@ -59,7 +68,13 @@ func DoVerify(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	ccaptcha = gocaptcha.CreateCaptchaFromConfigFile(*configFile)
+	captcha, err := gocaptcha.CreateCaptchaFromConfigFile(*configFile)
+
+	if nil != err {
+		panic(err.Error())
+	} else {
+		ccaptcha = captcha
+	}
 
 	http.HandleFunc("/getimage", ShowImageHandler)
 	http.HandleFunc("/getkey", ShowKey)

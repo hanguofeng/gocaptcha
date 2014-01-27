@@ -12,50 +12,63 @@ import (
 
 func TestCaptcha(t *testing.T) {
 
-	captcha := getCaptcha()
-	key := captcha.GetKey(4)
+	captcha, err := getCaptcha()
+	if nil != err {
+		t.Fatalf("getCaptcha Error:%s", err.Error())
+	}
+	key, err := captcha.GetKey(4)
+	if nil != err {
+		t.Fatalf("GetKey Error:%s", err.Error())
+	}
 	captcha.GetImage(key)
 	captcha.Verify(key, "test")
 
 }
 
 func BenchmarkCaptcha(t *testing.B) {
-	ccaptcha := getCaptcha()
+	captcha, err := getCaptcha()
+	if nil != err {
+		t.Fatalf("getCaptcha Error:%s", err.Error())
+	}
 
 	for i := 0; i < t.N; i++ {
 
-		s := ccaptcha.GetKey(4)
-		ccaptcha.GetImage(s)
-		ccaptcha.Verify(s, "ssss")
+		s, _ := captcha.GetKey(4)
+		captcha.GetImage(s)
+		captcha.Verify(s, "ssss")
 	}
 }
 
 func BenchmarkCaptchaInternalAPI(t *testing.B) {
-	ccaptcha := getCaptcha()
+	captcha, err := getCaptcha()
+	if nil != err {
+		t.Fatalf("getCaptcha Error:%s", err.Error())
+	}
 	for i := 0; i < t.N; i++ {
 
-		s := ccaptcha.GetKey(4)
-		ccaptcha.Verify(s, "ssss")
+		s, _ := captcha.GetKey(4)
+		captcha.Verify(s, "ssss")
 	}
 }
 
 func BenchmarkCaptchaDrawImage(t *testing.B) {
-	ccaptcha := getCaptcha()
+	captcha, err := getCaptcha()
+	if nil != err {
+		t.Fatalf("getCaptcha Error:%s", err.Error())
+	}
 	for i := 0; i < t.N; i++ {
 
-		s := ccaptcha.GetKey(4)
-		ccaptcha.GetImage(s)
+		s, _ := captcha.GetKey(4)
+		captcha.GetImage(s)
 	}
 }
 
-func getCaptcha() *Captcha {
+func getCaptcha() (*Captcha, error) {
 	wordDict, captchaConfig, imageConfig, filterConfig, storeConfig := loadConfig()
 
-	wordmgr := new(WordManager)
-	wordmgr.LoadFromFile(wordDict)
-	captcha := CreateCaptcha(wordmgr, captchaConfig, imageConfig, filterConfig, storeConfig)
-
-	return captcha
+	wordmgr, err := CreateWordManagerFromDataFile(wordDict)
+	captcha, err := CreateCaptcha(wordmgr, captchaConfig, imageConfig, filterConfig, storeConfig)
+	return captcha, err
 }
 
 func loadConfig() (string, *CaptchaConfig, *ImageConfig, *FilterConfig, *StoreConfig) {
