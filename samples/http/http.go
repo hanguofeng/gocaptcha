@@ -7,7 +7,6 @@ import (
 	"image/png"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/hanguofeng/gocaptcha"
 )
