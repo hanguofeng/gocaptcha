@@ -4,17 +4,34 @@
 
 package gocaptcha
 
-import ()
+import (
+	"strconv"
+)
 
 //ImageFilter is the interface of image filter
 type ImageFilterNoisePoint struct {
-	*ImageFilterBase
-	NoisePointNum int
+	ImageFilterBase
 }
 
 //Proc the image
 func (filter *ImageFilterNoisePoint) Proc(cimage *CImage) {
-	for i := 0; i < filter.NoisePointNum; i++ {
+	var num int
+	var err error
+	v, ok := filter.config.GetItem("Num")
+	if ok {
+		num, err = strconv.Atoi(v)
+		if nil != err {
+			num = 3
+		}
+	} else {
+		num = 3
+	}
+
+	for i := 0; i < num; i++ {
 		cimage.drawCircle(rnd(0, cimage.Bounds().Max.X), rnd(0, cimage.Bounds().Max.Y), rnd(0, 2), uint8(rnd(1, colorCount)))
 	}
+}
+
+func (filter *ImageFilterNoisePoint) GetId() string {
+	return "ImageFilterNoisePoint"
 }

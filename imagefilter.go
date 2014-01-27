@@ -9,12 +9,28 @@ import ()
 //ImageFilter is the interface of image filter
 type ImageFilter interface {
 	Proc(cimage *CImage)
+	GetId() string
+	SetConfig(FilterConfigGroup)
+	GetConfig() FilterConfigGroup
 }
 
 //ImageFilter is the base class of image filter
 type ImageFilterBase struct {
+	config FilterConfigGroup
 }
 
 func (filter *ImageFilterBase) Proc(cimage *CImage) {
 	panic("not impl")
+}
+
+func (filter *ImageFilterBase) GetId() string {
+	panic("not impl")
+}
+
+func (filter *ImageFilterBase) SetConfig(config FilterConfigGroup) {
+	filter.config = config
+}
+
+func (filter *ImageFilterBase) GetConfig() FilterConfigGroup {
+	return filter.config
 }

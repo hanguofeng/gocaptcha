@@ -5,75 +5,97 @@
 package gocaptcha
 
 import (
-	"image/png"
-	"log"
 	"os"
-	"runtime"
 	"testing"
 	"time"
 )
 
 func TestCaptcha(t *testing.T) {
 
-	var err error
-
-	if "windows" != runtime.GOOS {
-		return
-	}
-
-	pwd, err := os.Getwd()
-	if (nil != err) || "" == pwd {
-		return
-	}
-
-	path := pwd + "/data/cn_phrases"
-	wordmgr := new(WordManager)
-	wordmgr.LoadFromFile(path)
-
-	captchaConfig, imageConfig, filterConfig := loadConfig()
-
-	captcha := CreateCaptcha(wordmgr, captchaConfig, imageConfig, filterConfig)
+	captcha := getCaptcha()
 	key := captcha.GetKey(4)
-	img, err := captcha.GetImage(key)
-	log.Println(err)
-	captcha.Verify(key, "用户输入")
-
-	err = os.Mkdir(pwd+"/_test_files/", os.ModeDir)
-	log.Println(err)
-	f, err := os.Create(pwd + "/_test_files/hanguofeng.png")
-	log.Println(err)
-	defer f.Close()
-	png.Encode(f, img)
-	f.Close()
+	captcha.GetImage(key)
+	captcha.Verify(key, "test")
 
 }
 
-func loadConfig() (*CaptchaConfig, *ImageConfig, *FilterConfig) {
+func BenchmarkCaptcha(t *testing.B) {
+	ccaptcha := getCaptcha()
+
+	for i := 0; i < t.N; i++ {
+
+		s := ccaptcha.GetKey(4)
+		ccaptcha.GetImage(s)
+		ccaptcha.Verify(s, "ssss")
+	}
+}
+
+func BenchmarkCaptchaInternalAPI(t *testing.B) {
+	ccaptcha := getCaptcha()
+	for i := 0; i < t.N; i++ {
+
+		s := ccaptcha.GetKey(4)
+		ccaptcha.Verify(s, "ssss")
+	}
+}
+
+func BenchmarkCaptchaDrawImage(t *testing.B) {
+	ccaptcha := getCaptcha()
+	for i := 0; i < t.N; i++ {
+
+		s := ccaptcha.GetKey(4)
+		ccaptcha.GetImage(s)
+	}
+}
+
+func getCaptcha() *Captcha {
+	wordDict, captchaConfig, imageConfig, filterConfig, storeConfig := loadConfig()
+
+	wordmgr := new(WordManager)
+	wordmgr.LoadFromFile(wordDict)
+	captcha := CreateCaptcha(wordmgr, captchaConfig, imageConfig, filterConfig, storeConfig)
+
+	return captcha
+}
+
+func loadConfig() (string, *CaptchaConfig, *ImageConfig, *FilterConfig, *StoreConfig) {
+
+	pwd, _ := os.Getwd()
+	data_path := pwd + "/data/"
+
+	wordDict := data_path + "en_phrases"
 
 	captchaConfig := new(CaptchaConfig)
-	captchaConfig.CaptchaLifeTime = 10 * time.Second
-	captchaConfig.GcProbability = 1
-	captchaConfig.GcDivisor = 100
+	captchaConfig.LifeTime = 10 * time.Second
 
 	imageConfig := new(ImageConfig)
-	imageConfig.FontFiles = []string{
-		"c:/windows/fonts/SIMLI.TTF",
-		"c:/windows/fonts/simfang.ttf",
-		"c:/windows/fonts/SIMYOU.TTF",
-		"c:/windows/fonts/msyh.TTF",
-		"c:/windows/fonts/simhei.ttf",
-		"c:/windows/fonts/simkai.ttf"}
+	imageConfig.FontFiles = []string{data_path + "zpix.ttf"}
 	imageConfig.FontSize = 26
 	imageConfig.Height = 40
 	imageConfig.Width = 120
 
 	filterConfig := new(FilterConfig)
-	filterConfig.EnableNoiseLine = true
-	filterConfig.EnableNoisePoint = true
-	filterConfig.EnableStrike = true
-	filterConfig.StrikeLineNum = 3
-	filterConfig.NoisePointNum = 30
-	filterConfig.NoiseLineNum = 10
+	filterConfig.Init()
+	filterConfig.Filters = []string{"ImageFilterNoiseLine", "ImageFilterNoisePoint", "ImageFilterStrike"}
 
-	return captchaConfig, imageConfig, filterConfig
+	var filterConfigGroup *FilterConfigGroup
+	filterConfigGroup = new(FilterConfigGroup)
+	filterConfigGroup.Init()
+	filterConfigGroup.SetItem("Num", "5")
+	filterConfig.SetGroup("ImageFilterNoiseLine", filterConfigGroup)
+	filterConfigGroup = new(FilterConfigGroup)
+	filterConfigGroup.Init()
+	filterConfigGroup.SetItem("Num", "10")
+	filterConfig.SetGroup("ImageFilterNoisePoint", filterConfigGroup)
+	filterConfigGroup = new(FilterConfigGroup)
+	filterConfigGroup.Init()
+	filterConfigGroup.SetItem("Num", "3")
+	filterConfig.SetGroup("ImageFilterStrike", filterConfigGroup)
+
+	storeConfig := new(StoreConfig)
+	storeConfig.Engine = STORE_ENGINE_BUILDIN
+	storeConfig.GcDivisor = 100
+	storeConfig.GcProbability = 1
+
+	return wordDict, captchaConfig, imageConfig, filterConfig, storeConfig
 }

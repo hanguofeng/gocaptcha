@@ -7,7 +7,6 @@ package gocaptcha
 import (
 	"encoding/csv"
 	"io"
-	"log"
 	"os"
 	"strings"
 	"unicode/utf8"
@@ -79,8 +78,6 @@ func (mgr *WordManager) LoadFromFile(filename string) error {
 
 		mgr.words = append(mgr.words, strings.TrimSpace(record[0]))
 	}
-
-	log.Printf("Load Complete,totle : %d,isDataSingleChar:%s", len(mgr.words), mgr.isDataSingleChar)
 
 	return nil
 }

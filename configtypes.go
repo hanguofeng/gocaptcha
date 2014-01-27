@@ -10,19 +10,40 @@ import (
 
 //CaptchaConfig ,the captcha config
 type CaptchaConfig struct {
-	CaptchaLifeTime time.Duration
-	GcProbability   int
-	GcDivisor       int
+	LifeTime time.Duration
 }
 
-//FilterConfig ,the filter config
+//FilterConfigGroup
+type FilterConfigGroup struct {
+	data map[string]string
+}
+
+func (this *FilterConfigGroup) Init() {
+	this.data = map[string]string{}
+}
+func (this *FilterConfigGroup) GetItem(key string) (string, bool) {
+	val, ok := this.data[key]
+	return val, ok
+}
+func (this *FilterConfigGroup) SetItem(key string, val string) {
+	this.data[key] = val
+}
+
 type FilterConfig struct {
-	EnableStrike     bool
-	EnableNoisePoint bool
-	EnableNoiseLine  bool
-	StrikeLineNum    int
-	NoisePointNum    int
-	NoiseLineNum     int
+	Filters []string
+	data    map[string]*FilterConfigGroup
+}
+
+func (this *FilterConfig) Init() {
+	this.Filters = []string{}
+	this.data = map[string]*FilterConfigGroup{}
+}
+func (this *FilterConfig) GetGroup(key string) (FilterConfigGroup, bool) {
+	val, ok := this.data[key]
+	return *val, ok
+}
+func (this *FilterConfig) SetGroup(key string, group *FilterConfigGroup) {
+	this.data[key] = group
 }
 
 //ImageConfig ,the image config
@@ -32,4 +53,16 @@ type ImageConfig struct {
 	FontSize    float64
 	FontFiles   []string
 	fontManager *FontManager
+}
+
+const STORE_ENGINE_BUILDIN = "buildin"
+const STORE_ENGINE_MEMCACHE = "memcache"
+
+//StoreConfig ,the store engine config
+type StoreConfig struct {
+	CaptchaConfig
+	Engine        string
+	Servers       []string
+	GcProbability int
+	GcDivisor     int
 }

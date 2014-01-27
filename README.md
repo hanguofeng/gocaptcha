@@ -41,6 +41,11 @@ LICENCE
 gocaptcha使用[[MIT许可协议](LICENSE)]
 
 
+使用的开源软件列表，表示感谢
+* https://code.google.com/p/freetype-go/freetype
+* https://github.com/bradfitz/gomemcache/memcache
+* https://code.google.com/p/zpix/
+
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/hanguofeng/gocaptcha/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
