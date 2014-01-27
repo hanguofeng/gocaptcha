@@ -26,6 +26,7 @@ Useage
 **Quick Start**
 
 参考 [captcha_test.go](captcha_test.go)
+参考 [samples/http](samples/http)
 
 **文档**
 
