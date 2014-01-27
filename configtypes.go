@@ -40,6 +40,10 @@ func (this *FilterConfig) Init() {
 }
 func (this *FilterConfig) GetGroup(key string) (FilterConfigGroup, bool) {
 	val, ok := this.data[key]
+	if !ok {
+		val = new(FilterConfigGroup)
+	}
+
 	return *val, ok
 }
 func (this *FilterConfig) SetGroup(key string, group *FilterConfigGroup) {

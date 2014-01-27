@@ -37,14 +37,14 @@ func CreateImageFilterManagerByConfig(config *FilterConfig) *ImageFilterManager 
 	}
 
 	for _, classP := range filterClassMap {
-
+		//bug:crash when config has open_filters but not have the detail config
 		for _, cfgId := range config.Filters {
-			if cfgId == classP.GetId() {
+			if (len(cfgId) > 0) && (cfgId == classP.GetId()) {
 				c, ok := config.GetGroup(cfgId)
-				if ok {
+				if ok && nil != &c && len(c.data) > 0 {
 					classP.SetConfig(c)
-					mgr.AddFilter(classP)
 				}
+				mgr.AddFilter(classP)
 			}
 		}
 

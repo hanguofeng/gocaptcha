@@ -23,10 +23,10 @@ func (filter *ImageFilterStrike) Proc(cimage *CImage) {
 	if ok {
 		num, err = strconv.Atoi(v)
 		if nil != err {
-			num = 3
+			num = 1
 		}
 	} else {
-		num = 3
+		num = 1
 	}
 
 	maxx := cimage.Bounds().Max.X

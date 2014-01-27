@@ -34,6 +34,16 @@ func CreateCaptcha(wordManager *WordManager, captchaConfig *CaptchaConfig, image
 	return captcha
 }
 
+//CreateCaptchaFromConfigFile is a method to create new Captcha struct
+func CreateCaptchaFromConfigFile(configFile string) *Captcha {
+	wordDict, captchaConfig, imageConfig, filterConfig, storeConfig := loadConfigFromFile(configFile)
+	wordmgr := new(WordManager)
+	wordmgr.LoadFromFile(wordDict)
+	captcha := CreateCaptcha(wordmgr, captchaConfig, imageConfig, filterConfig, storeConfig)
+
+	return captcha
+}
+
 //GetKey will generate a key with required length
 func (captcha *Captcha) GetKey(length int) string {
 	text := captcha.wordManager.Get(length)
