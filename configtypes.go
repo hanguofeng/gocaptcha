@@ -40,7 +40,11 @@ func (this *FilterConfig) Init() {
 }
 func (this *FilterConfig) GetGroup(key string) (FilterConfigGroup, bool) {
 	val, ok := this.data[key]
-	return *val, ok
+	if ok {
+		return *val, ok
+	} else {
+		return *new(FilterConfigGroup), ok
+	}
 }
 func (this *FilterConfig) SetGroup(key string, group *FilterConfigGroup) {
 	this.data[key] = group
