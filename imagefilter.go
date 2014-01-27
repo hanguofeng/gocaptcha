@@ -11,6 +11,7 @@ type ImageFilter interface {
 	Proc(cimage *CImage)
 	GetId() string
 	SetConfig(FilterConfigGroup)
+	GetConfig() FilterConfigGroup
 }
 
 //ImageFilter is the base class of image filter
@@ -28,4 +29,8 @@ func (filter *ImageFilterBase) GetId() string {
 
 func (filter *ImageFilterBase) SetConfig(config FilterConfigGroup) {
 	filter.config = config
+}
+
+func (filter *ImageFilterBase) GetConfig() FilterConfigGroup {
+	return filter.config
 }
