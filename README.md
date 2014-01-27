@@ -16,6 +16,11 @@ Feature
 	* 支持干扰线
 	* 支持其他模式的干扰
 	* 更多模式，可实现imagefilter接口来扩展
+* 支持自定义存储引擎，存储引擎可扩展
+* 目前支持的存储引擎包括:
+	* 内置(buildin)
+	* memcache
+	* 如需扩展存储引擎，可实现StoreInterface接口
 
 Useage
 ------
@@ -35,7 +40,6 @@ Useage
 
 TODO
 ----
-* 支持单机、集群部署
 * 运维管理工具
 
 LICENCE
@@ -44,8 +48,10 @@ gocaptcha使用[[MIT许可协议](LICENSE)]
 
 
 使用的开源软件列表，表示感谢
+
+* https://github.com/dchest/captcha
 * https://code.google.com/p/freetype-go/freetype
-* https://github.com/bradfitz/gomemcache/memcache
+* https://github.com/bradfitz/gomemcache
 * https://code.google.com/p/zpix/
 
 
