@@ -4,11 +4,7 @@ View in [[English](README-en.md)][[中文](README.md)]
 # gocaptcha
 go语言验证码服务器
 
-[![Build Status](https://travis-ci.org/hanguofeng/gocaptcha.png?branch=master)](https://travis-ci.org/hanguofeng/gocaptcha)  
-[![Build Status](https://drone.io/github.com/hanguofeng/gocaptcha/status.png)](https://drone.io/github.com/hanguofeng/gocaptcha/latest)   
-[![Coverage Status](https://coveralls.io/repos/hanguofeng/gocaptcha/badge.png)](https://coveralls.io/r/hanguofeng/gocaptcha)   
-
-
+[![Build Status](https://travis-ci.org/hanguofeng/gocaptcha.png?branch=master)](https://travis-ci.org/hanguofeng/gocaptcha)  [![Build Status](https://drone.io/github.com/hanguofeng/gocaptcha/status.png)](https://drone.io/github.com/hanguofeng/gocaptcha/latest)   [![Coverage Status](https://coveralls.io/repos/hanguofeng/gocaptcha/badge.png)](https://coveralls.io/r/hanguofeng/gocaptcha)   
 
 
 Feature
