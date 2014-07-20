@@ -9,7 +9,7 @@ import (
 	"image/color"
 	"image/draw"
 
-	"code.google.com/p/freetype-go/freetype"
+	"github.com/hanguofeng/freetype-go-mirror/freetype"
 )
 
 const (
