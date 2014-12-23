@@ -129,7 +129,12 @@ func createStore(config *StoreConfig) (StoreInterface, error) {
 		store = CreateMCStore(config.LifeTime, config.Servers)
 		break
 	default:
-		err = errors.New("Not supported engine:'" + config.Engine + "'")
+		creator, has := storeCreators[config.Engine]
+		if !has {
+			err = errors.New("Not supported engine:'" + config.Engine + "'")
+			break
+		}
+		store, err = creator(config)
 	}
 	return store, err
 }
