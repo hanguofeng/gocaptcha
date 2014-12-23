@@ -12,8 +12,9 @@ import (
 
 //Captcha is the core captcha struct
 type Captcha struct {
-	store       StoreInterface
-	wordManager *WordManager
+	store         StoreInterface
+	wordManager   *WordManager
+	filterManager *ImageFilterManager
 
 	captchaConfig *CaptchaConfig
 	imageConfig   *ImageConfig
@@ -41,6 +42,8 @@ func CreateCaptcha(wordManager *WordManager, captchaConfig *CaptchaConfig, image
 	captcha.captchaConfig = captchaConfig
 	captcha.imageConfig = imageConfig
 	captcha.filterConfig = filterConfig
+
+	captcha.filterManager = CreateImageFilterManagerByConfig(filterConfig)
 
 	return captcha, retErr
 }
@@ -97,8 +100,6 @@ func (captcha *Captcha) Verify(key, textToVerify string) (bool, string) {
 	}
 	captcha.store.Del(key)
 	return true, ""
-
-	return false, "not reachable"
 }
 
 //GetImage will generate the binary image data
@@ -144,9 +145,7 @@ func (captcha *Captcha) genImage(text string) *CImage {
 	cimg := CreateCImage(captcha.imageConfig)
 	cimg.drawString(text)
 
-	filtermanager := CreateImageFilterManagerByConfig(captcha.filterConfig)
-
-	for _, filter := range filtermanager.GetFilters() {
+	for _, filter := range captcha.filterManager.GetFilters() {
 		filter.Proc(cimg)
 	}
 

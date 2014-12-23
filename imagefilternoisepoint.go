@@ -8,9 +8,17 @@ import (
 	"strconv"
 )
 
+const IMAGE_FILTER_NOISE_POINT = "ImageFilterNoisePoint"
+
 //ImageFilter is the interface of image filter
 type ImageFilterNoisePoint struct {
 	ImageFilterBase
+}
+
+func imageFilterNoisePointCreator(config FilterConfigGroup) ImageFilter {
+	filter := ImageFilterNoisePoint{}
+	filter.SetConfig(config)
+	return &filter
 }
 
 //Proc the image
@@ -33,5 +41,5 @@ func (filter *ImageFilterNoisePoint) Proc(cimage *CImage) {
 }
 
 func (filter *ImageFilterNoisePoint) GetId() string {
-	return "ImageFilterNoisePoint"
+	return IMAGE_FILTER_NOISE_POINT
 }
