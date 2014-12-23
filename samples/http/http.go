@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/hanguofeng/gocaptcha"
+	"github.com/dtynn/gocaptcha"
 )
 
 var (
