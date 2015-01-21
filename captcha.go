@@ -7,6 +7,7 @@ package gocaptcha
 import (
 	"errors"
 	"image"
+	"strings"
 	"time"
 )
 
@@ -95,9 +96,17 @@ func (captcha *Captcha) Verify(key, textToVerify string) (bool, string) {
 		return false, "captcha expires"
 	}
 
-	if info.Text != textToVerify {
+	verified := false
+	if captcha.captchaConfig.CaseSensitive {
+		verified = info.Text == textToVerify
+	} else {
+		verified = strings.ToLower(info.Text) == strings.ToLower(textToVerify)
+	}
+
+	if !verified {
 		return false, "captcha text not match"
 	}
+
 	captcha.store.Del(key)
 	return true, ""
 }
