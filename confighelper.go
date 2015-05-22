@@ -124,9 +124,9 @@ func loadConfigFromFile(configFile string) (error, string, *CaptchaConfig, *Imag
 	}
 	servers, err := c.StringMuti("store", "servers")
 	if nil != err {
-		storeConfig.Servers = servers
-	} else {
 		storeConfig.Servers = []string{}
+	} else {
+		storeConfig.Servers = servers
 	}
 	gcProbability, err := c.Int("store", "gc_probability")
 	if nil != err {

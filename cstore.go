@@ -52,6 +52,7 @@ func (store *CStore) Add(captcha *CaptchaInfo) string {
 	defer store.mu.Unlock()
 	key := fmt.Sprintf("%s%s%x", captcha.Text, randStr(20), time.Now().UnixNano())
 	key = hex.EncodeToString(md5.New().Sum([]byte(key)))
+	key = key[:32]
 	store.data[key] = captcha
 	return key
 }
