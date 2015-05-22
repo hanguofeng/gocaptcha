@@ -31,7 +31,7 @@ Useage
 
 See [captcha_test.go](captcha_test.go)
 
-See [samples/http](samples/gocaptcha-server)
+See [samples/gocaptcha-server](samples/gocaptcha-server)
 
 **Document**
 

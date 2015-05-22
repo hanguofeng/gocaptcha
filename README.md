@@ -33,7 +33,7 @@ Useage
 
 参考 [captcha_test.go](captcha_test.go)
 
-参考 [samples/http](samples/gocaptcha-server)
+参考 [samples/gocaptcha-server](samples/gocaptcha-server)
 
 **文档**
 

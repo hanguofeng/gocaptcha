@@ -95,13 +95,14 @@ func VerifyHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	flag.Parse()
 	
 	/* 1.load the config file and assign port/logfile */
 	port := DEFAULT_PORT
 	logfile := DEFAULT_LOG
 
 	if _, err := os.Stat(*configFile); os.IsNotExist(err) {
-		log.Fatal("config file not exists!")
+		log.Fatalf("config file:%s not exists!",*configFile)
 		os.Exit(1)
 	}
 
