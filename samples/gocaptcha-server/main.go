@@ -30,10 +30,11 @@ func ShowImageHandler(w http.ResponseWriter, r *http.Request) {
 	if len(key) >= 0 {
 		cimg, err := ccaptcha.GetImage(key)
 		log.Println("err", err)
-		if nil != err {
+		if nil == err {
 			w.Header().Add("Content-Type", "image/png")
 			png.Encode(w, cimg)
 		} else {
+			log.Fatalf("show image error:%s",err.Error())
 			w.WriteHeader(500)
 		}
 	}
