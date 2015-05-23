@@ -95,6 +95,21 @@ func VerifyHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("[cmd:verify][remote_addr:%s][key:%s][code:%s]", r.RemoteAddr, key, code)
 }
 
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
+	retstr:="<html>"
+	retstr+="<body>"
+	retstr+="<h1>gocaptcha server</h1>"
+	retstr+="<h2>document</h2>"
+	retstr+="<p>see:<a href='https://github.com/hanguofeng/gocaptcha/tree/master/samples/gocaptcha-server'>https://github.com/hanguofeng/gocaptcha/tree/master/samples/gocaptcha-server</a></p>"
+	retstr+="<h2>interface</h2>"
+	retstr+="<p><a href='/getkey'>/getkey</a></p>"
+	retstr+="<p><a href='/showimage'>/showimage</a></p>"
+	retstr+="<p><a href='/verify'>/verify</a></p>"
+	retstr+="</body>"
+	retstr+="</html>"
+	w.Write([]byte(retstr))
+}
+
 func main() {
 	flag.Parse()
 	
@@ -137,6 +152,7 @@ func main() {
 	http.HandleFunc("/showimage", ShowImageHandler)
 	http.HandleFunc("/getkey", GetKeyHandler)
 	http.HandleFunc("/verify", VerifyHandler)
+	http.HandleFunc("/", IndexHandler)
 
 	/* 3. run the http server */
 	s := &http.Server{Addr: ":" + port}
