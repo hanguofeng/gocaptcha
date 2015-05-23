@@ -6,5 +6,5 @@ ENV GOPATH /home/work/gopath;
 RUN go get github.com/hanguofeng/gocaptcha/samples/gocaptcha-server;
 WORKDIR $GOPATH/src/github.com/hanguofeng/gocaptcha/samples/gocaptcha-server
 RUN ["go","build"]
-EXPOSE 8089
-ENTRYPOINT ["./gocaptcha-server&"]
+EXPOSE 80
+ENTRYPOINT ["./gocaptcha-server"]
