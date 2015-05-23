@@ -1,7 +1,9 @@
-FROM    ubuntu
-RUN apt-get update
-RUN apt-get install -y golang git mercurial memcached
-RUN service memcached start
-ADD . $HOME/gopath/src/github.com/hanguofeng/gocaptcha
-RUN export GOPATH=$HOME/gopath:$GOPATH;cd $HOME/gopath/src/github.com/hanguofeng/gocaptcha;go get -v ./...;
-
+FROM centos
+RUN yum -y update
+RUN yum install -y golang git mercurial memcached
+RUN memcached -p 11211 -d -unobody
+RUN mkdir -p /home/work/gopath
+ENV GOPATH /home/work/gopath;
+RUN go get github.com/hanguofeng/gocaptcha/samples/gocaptcha-server;
+WORKDIR $GOPATH/src/github.com/hanguofeng/gocaptcha/samples/gocaptcha-server
+RUN go run main.go
