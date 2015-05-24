@@ -19,6 +19,7 @@ Feature
 * supports extensible store engine
 	* build-in store engine
 	* memcache
+	* redis (from https://github.com/dtynn/gocaptcha)
 	* implement your own by implement the StoreInterface
 
 Useage
@@ -51,6 +52,3 @@ Thanks:
 * https://code.google.com/p/freetype-go/freetype
 * https://github.com/bradfitz/gomemcache
 * https://code.google.com/p/zpix/
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/hanguofeng/gocaptcha/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

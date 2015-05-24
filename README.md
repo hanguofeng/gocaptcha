@@ -21,6 +21,7 @@ Feature
 * 目前支持的存储引擎包括:
 	* 内置(buildin)
 	* memcache
+	* redis (from https://github.com/dtynn/gocaptcha)
 	* 如需扩展存储引擎，可实现StoreInterface接口
 
 Useage
@@ -54,7 +55,3 @@ gocaptcha使用[[MIT许可协议](LICENSE)]
 * https://code.google.com/p/freetype-go/freetype
 * https://github.com/bradfitz/gomemcache
 * https://code.google.com/p/zpix/
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/hanguofeng/gocaptcha/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
