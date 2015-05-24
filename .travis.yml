@@ -5,3 +5,4 @@ go:
   - tip
 services:
   - memcached
+  - redis-server
