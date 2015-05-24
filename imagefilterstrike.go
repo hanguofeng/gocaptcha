@@ -9,9 +9,17 @@ import (
 	"strconv"
 )
 
+const IMAGE_FILTER_STRIKE = "ImageFilterStrike"
+
 //ImageFilter is the interface of image filter
 type ImageFilterStrike struct {
 	ImageFilterBase
+}
+
+func imageFilterStrikeCreator(config FilterConfigGroup) ImageFilter {
+	filter := ImageFilterStrike{}
+	filter.SetConfig(config)
+	return &filter
 }
 
 //Proc the image
@@ -46,5 +54,5 @@ func (filter *ImageFilterStrike) Proc(cimage *CImage) {
 }
 
 func (filter *ImageFilterStrike) GetId() string {
-	return "ImageFilterStrike"
+	return IMAGE_FILTER_STRIKE
 }

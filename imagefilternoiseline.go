@@ -9,8 +9,16 @@ import (
 )
 
 //ImageFilter is the interface of image filter
+const IMAGE_FILTER_NOISE_LINE = "ImageFilterNoiseLine"
+
 type ImageFilterNoiseLine struct {
 	ImageFilterBase
+}
+
+func imageFilterNoiseLineCreator(config FilterConfigGroup) ImageFilter {
+	filter := ImageFilterNoiseLine{}
+	filter.SetConfig(config)
+	return &filter
 }
 
 //Proc the image
@@ -35,5 +43,5 @@ func (filter *ImageFilterNoiseLine) Proc(cimage *CImage) {
 }
 
 func (filter *ImageFilterNoiseLine) GetId() string {
-	return "ImageFilterNoiseLine"
+	return IMAGE_FILTER_NOISE_LINE
 }

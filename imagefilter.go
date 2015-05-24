@@ -6,6 +6,16 @@ package gocaptcha
 
 import ()
 
+var imageFilterCreators = map[string]func(FilterConfigGroup) ImageFilter{}
+
+func RegisterImageFilter(id string, f func(FilterConfigGroup) ImageFilter) bool {
+	if _, has := imageFilterCreators[id]; has {
+		return false
+	}
+	imageFilterCreators[id] = f
+	return true
+}
+
 //ImageFilter is the interface of image filter
 type ImageFilter interface {
 	Proc(cimage *CImage)
