@@ -34,7 +34,7 @@ func ShowImageHandler(w http.ResponseWriter, r *http.Request) {
 			w.Header().Add("Content-Type", "image/png")
 			png.Encode(w, cimg)
 		} else {
-			log.Fatalf("show image error:%s",err.Error())
+			log.Printf("show image error:%s", err.Error())
 			w.WriteHeader(500)
 		}
 	}
@@ -96,29 +96,30 @@ func VerifyHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	retstr:="<html>"
-	retstr+="<body>"
-	retstr+="<h1>gocaptcha server</h1>"
-	retstr+="<h2>document</h2>"
-	retstr+="<p>see:<a href='https://github.com/hanguofeng/gocaptcha/tree/master/samples/gocaptcha-server'>https://github.com/hanguofeng/gocaptcha/tree/master/samples/gocaptcha-server</a></p>"
-	retstr+="<h2>interface</h2>"
-	retstr+="<p><a href='/getkey'>/getkey</a></p>"
-	retstr+="<p><a href='/showimage'>/showimage</a></p>"
-	retstr+="<p><a href='/verify'>/verify</a></p>"
-	retstr+="</body>"
-	retstr+="</html>"
+	retstr := "<html>"
+	retstr += "<body>"
+	retstr += "<h1>gocaptcha server</h1>"
+	retstr += "<h2>document</h2>"
+	retstr += "<p>see:<a href='https://github.com/hanguofeng/gocaptcha/tree/master/samples/gocaptcha-server'>https://github.com/hanguofeng/gocaptcha/tree/master/samples/gocaptcha-server</a></p>"
+	retstr += "<h2>interface</h2>"
+	retstr += "<p><a href='/getkey'>/getkey</a></p>"
+	retstr += "<p><a href='/showimage'>/showimage</a></p>"
+	retstr += "<p><a href='/verify'>/verify</a></p>"
+	retstr += "</body>"
+	retstr += "</html>"
 	w.Write([]byte(retstr))
 }
 
 func main() {
+
 	flag.Parse()
-	
+
 	/* 1.load the config file and assign port/logfile */
 	port := DEFAULT_PORT
 	logfile := DEFAULT_LOG
 
 	if _, err := os.Stat(*configFile); os.IsNotExist(err) {
-		log.Fatalf("config file:%s not exists!",*configFile)
+		log.Fatalf("config file:%s not exists!", *configFile)
 		os.Exit(1)
 	}
 
@@ -159,4 +160,5 @@ func main() {
 
 	log.Printf("=======ready to serve=======")
 	log.Fatal(s.ListenAndServe())
+	f.Close()
 }
