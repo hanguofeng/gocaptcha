@@ -84,6 +84,17 @@ func (mgr *WordManager) Get(length int) (string, error) {
 	return rst, retErr
 }
 
+func (mgr *WordManager) SetWords(words []string) {
+	mgr.words = words
+	mgr.isValid = len(words) > 0
+	mgr.isDataSingleChar = true
+	for _, s := range words {
+		if len([]rune(s)) > 1 {
+			mgr.isDataSingleChar = false
+		}
+	}
+}
+
 func (mgr *WordManager) getLine() string {
 	maxIndex := len(mgr.words) - 1
 	rstIndex := rnd(0, maxIndex)

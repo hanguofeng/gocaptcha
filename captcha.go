@@ -7,13 +7,15 @@ package gocaptcha
 import (
 	"errors"
 	"image"
+	"strings"
 	"time"
 )
 
 //Captcha is the core captcha struct
 type Captcha struct {
-	store       StoreInterface
-	wordManager *WordManager
+	store         StoreInterface
+	wordManager   *WordManager
+	filterManager *ImageFilterManager
 
 	captchaConfig *CaptchaConfig
 	imageConfig   *ImageConfig
@@ -41,6 +43,8 @@ func CreateCaptcha(wordManager *WordManager, captchaConfig *CaptchaConfig, image
 	captcha.captchaConfig = captchaConfig
 	captcha.imageConfig = imageConfig
 	captcha.filterConfig = filterConfig
+
+	captcha.filterManager = CreateImageFilterManagerByConfig(filterConfig)
 
 	return captcha, retErr
 }
@@ -92,13 +96,19 @@ func (captcha *Captcha) Verify(key, textToVerify string) (bool, string) {
 		return false, "captcha expires"
 	}
 
-	if info.Text != textToVerify {
+	verified := false
+	if captcha.captchaConfig.CaseSensitive {
+		verified = info.Text == textToVerify
+	} else {
+		verified = strings.ToLower(info.Text) == strings.ToLower(textToVerify)
+	}
+
+	if !verified {
 		return false, "captcha text not match"
 	}
+
 	captcha.store.Del(key)
 	return true, ""
-
-	return false, "not reachable"
 }
 
 //GetImage will generate the binary image data
@@ -120,7 +130,6 @@ func (captcha *Captcha) GetImage(key string) (image.Image, error) {
 func createStore(config *StoreConfig) (StoreInterface, error) {
 	var store StoreInterface
 	var err error
-
 	switch config.Engine {
 	case STORE_ENGINE_BUILDIN:
 		store = CreateCStore(config.LifeTime, config.GcProbability, config.GcDivisor)
@@ -129,7 +138,12 @@ func createStore(config *StoreConfig) (StoreInterface, error) {
 		store = CreateMCStore(config.LifeTime, config.Servers)
 		break
 	default:
-		err = errors.New("Not supported engine:'" + config.Engine + "'")
+		creator, has := storeCreators[config.Engine]
+		if !has {
+			err = errors.New("Not supported engine:'" + config.Engine + "'")
+			break
+		}
+		store, err = creator(config)
 	}
 	return store, err
 }
@@ -139,9 +153,7 @@ func (captcha *Captcha) genImage(text string) *CImage {
 	cimg := CreateCImage(captcha.imageConfig)
 	cimg.drawString(text)
 
-	filtermanager := CreateImageFilterManagerByConfig(captcha.filterConfig)
-
-	for _, filter := range filtermanager.GetFilters() {
+	for _, filter := range captcha.filterManager.GetFilters() {
 		filter.Proc(cimg)
 	}
 

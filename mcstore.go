@@ -16,9 +16,11 @@ import (
 
 	"github.com/bradfitz/gomemcache/memcache"
 )
+
 const (
-	MC_KEY_PREFIX="gocaptcha-"
+	MC_KEY_PREFIX = "gocaptcha-"
 )
+
 //MCStore is the Captcha info store service
 type MCStore struct {
 	engine string
@@ -37,7 +39,7 @@ func CreateMCStore(expiresTime time.Duration, servers []string) *MCStore {
 
 //Get captcha info by key
 func (store *MCStore) Get(key string) *CaptchaInfo {
-	item, err := store.mc.Get(MC_KEY_PREFIX+key)
+	item, err := store.mc.Get(MC_KEY_PREFIX + key)
 	if nil != err {
 		return nil
 	}
@@ -53,13 +55,13 @@ func (store *MCStore) Add(captcha *CaptchaInfo) string {
 	key = key[:32]
 
 	item := new(memcache.Item)
-	item.Key = MC_KEY_PREFIX+key
+	item.Key = MC_KEY_PREFIX + key
 	item.Value = store.encodeValue(captcha)
 
 	err := store.mc.Add(item)
 
 	if nil != err {
-		log.Fatal(err)
+		log.Printf("add key in memcache err:%s", err)
 	}
 
 	return key
@@ -67,7 +69,7 @@ func (store *MCStore) Add(captcha *CaptchaInfo) string {
 
 //Del captcha info by key
 func (store *MCStore) Del(key string) {
-	store.mc.Delete(MC_KEY_PREFIX+key)
+	store.mc.Delete(MC_KEY_PREFIX + key)
 }
 
 //Destroy the whole store

@@ -116,6 +116,7 @@ func loadConfigFromFile(configFile string) (error, string, *CaptchaConfig, *Imag
 
 	//storeConfig
 	storeConfig := new(StoreConfig)
+	storeConfig.CaptchaConfig = *captchaConfig
 	engine, err := c.String("store", "engine")
 	if nil != err {
 		retErr = errors.New("loadConfigFromFile Fail,engine options failed" + err.Error())
