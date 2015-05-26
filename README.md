@@ -36,6 +36,8 @@ Useage
 
 参考 [samples/gocaptcha-server](samples/gocaptcha-server)
 
+[Demo](http://hanguofeng-gocaptcha.daoapp.io/)
+
 **文档**
 
 [[captcha.go Wiki](https://github.com/hanguofeng/gocaptcha/wiki)]
