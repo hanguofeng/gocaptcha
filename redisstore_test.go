@@ -10,11 +10,11 @@ import (
 )
 
 func TestRedisStore(t *testing.T) {
-	storeConfig:=&StoreConfig{}
-	storeConfig.CaptchaConfig.LifeTime=time.Second*100
-	storeConfig.Engine="redis"
-	storeConfig.Servers= []string{"127.0.0.1:6379"}
-	store ,_:= CreateCaptchaRedisStore(storeConfig)
+	storeConfig := &StoreConfig{}
+	storeConfig.CaptchaConfig.LifeTime = time.Second * 100
+	storeConfig.Engine = "redis"
+	storeConfig.Servers = []string{"127.0.0.1:6379"}
+	store, _ := CreateCaptchaRedisStore(storeConfig)
 
 	captcha := new(CaptchaInfo)
 	captcha.Text = "hello"
@@ -26,6 +26,13 @@ func TestRedisStore(t *testing.T) {
 
 	if retV.Text != captcha.Text {
 		t.Errorf("not equal,retV:%s,captcha:%s", retV, captcha)
+	}
+
+	retV.Text = "world"
+	store.Update(key, retV)
+	retV = store.Get(key)
+	if retV.Text != "world" {
+		t.Errorf("update not equal,retV:%s,captcha:%s", retV, captcha)
 	}
 
 	t.Logf("TestMCStore:get from redis:%s", retV)

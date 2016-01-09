@@ -25,6 +25,14 @@ func TestMCStore(t *testing.T) {
 		t.Errorf("not equal,retV:%s,captcha:%s", retV, captcha)
 	}
 
+	retV.Text = "world"
+	store.Update(key, retV)
+	retV = store.Get(key)
+
+	if retV.Text != "world" {
+		t.Errorf("update not equal,retV:%s,captcha:%s", retV, captcha)
+	}
+
 	t.Logf("TestMCStore:get from mc:%s", retV)
 
 	//test del

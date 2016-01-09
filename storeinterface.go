@@ -12,6 +12,7 @@ var storeCreators = map[string]func(*StoreConfig) (StoreInterface, error){}
 type StoreInterface interface {
 	Get(key string) *CaptchaInfo
 	Add(captcha *CaptchaInfo) string
+	Update(key string, captcha *CaptchaInfo) bool
 	Del(key string)
 	Destroy()
 	OnConstruct()

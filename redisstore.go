@@ -78,6 +78,21 @@ func (this *CaptchaRedisStore) Add(captcha *CaptchaInfo) string {
 	return key
 }
 
+func (this *CaptchaRedisStore) Update(key string, captcha *CaptchaInfo) bool {
+	val, err := this.encodeCaptchaInfo(captcha)
+	if err == nil {
+		if seterr := this.stg.Set(key, string(val)); seterr != nil {
+			log.Printf("set key in redis error:%s", seterr)
+			return false
+		} else {
+			return true
+		}
+	} else {
+		return false
+	}
+
+}
+
 func (this *CaptchaRedisStore) Del(key string) {
 	this.stg.Del(key)
 }

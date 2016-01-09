@@ -67,6 +67,22 @@ func (store *MCStore) Add(captcha *CaptchaInfo) string {
 	return key
 }
 
+//Update captcha info
+func (store *MCStore) Update(key string, captcha *CaptchaInfo) bool {
+	item := new(memcache.Item)
+	item.Key = MC_KEY_PREFIX + key
+	item.Value = store.encodeValue(captcha)
+
+	err := store.mc.Set(item)
+
+	if nil != err {
+		log.Printf("update key in memcache err:%s", err)
+		return false
+	} else {
+		return true
+	}
+}
+
 //Del captcha info by key
 func (store *MCStore) Del(key string) {
 	store.mc.Delete(MC_KEY_PREFIX + key)

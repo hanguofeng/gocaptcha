@@ -24,6 +24,14 @@ func TestStore(t *testing.T) {
 		t.Errorf("not equal")
 	}
 
+	retV.Text = "world"
+	store.Update(key, retV)
+
+	retV = store.Get(key)
+	if retV.Text != "world" {
+		t.Errorf("update not equal")
+	}
+
 	//test dump,destroy and loaddumped
 	store.Dump("data/data.dat")
 	store.Destroy()
