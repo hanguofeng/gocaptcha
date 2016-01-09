@@ -14,4 +14,5 @@ import (
 type CaptchaInfo struct {
 	Text       string
 	CreateTime time.Time
+	ShownTimes int
 }

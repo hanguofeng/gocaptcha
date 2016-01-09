@@ -48,6 +48,13 @@ func loadConfigFromFile(configFile string) (error, string, *CaptchaConfig, *Imag
 
 	captchaConfig.LifeTime = lifeTime
 
+	cfgChangeTextOnRefresh, err := c.Bool("captcha", "change_text_on_refresh")
+	if nil != err {
+		cfgChangeTextOnRefresh = false
+	}
+
+	captchaConfig.ChangeTextOnRefresh = cfgChangeTextOnRefresh
+
 	//imageConfig
 	imageConfig := new(ImageConfig)
 	var fontFiles []string

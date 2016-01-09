@@ -10,8 +10,9 @@ import (
 
 //CaptchaConfig ,the captcha config
 type CaptchaConfig struct {
-	LifeTime      time.Duration
-	CaseSensitive bool
+	LifeTime            time.Duration
+	CaseSensitive       bool
+	ChangeTextOnRefresh bool
 }
 
 //FilterConfigGroup

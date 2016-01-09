@@ -80,6 +80,7 @@ func (captcha *Captcha) GetKey(length int) (string, error) {
 		info := new(CaptchaInfo)
 		info.Text = text
 		info.CreateTime = time.Now()
+		info.ShownTimes = 0
 		rst = captcha.store.Add(info)
 	}
 	return rst, retErr
@@ -121,6 +122,21 @@ func (captcha *Captcha) GetImage(key string) (image.Image, error) {
 
 	if info.CreateTime.Add(captcha.captchaConfig.LifeTime).Before(time.Now()) {
 		return nil, errors.New("captcha expires")
+	}
+
+	if captcha.captchaConfig.ChangeTextOnRefresh {
+		if info.ShownTimes > 0 {
+
+			text, err := captcha.wordManager.Get(len(info.Text))
+			if nil != err {
+				return nil, err
+			} else {
+				info.Text = text
+			}
+		}
+
+		info.ShownTimes++
+		captcha.store.Update(key, info)
 	}
 
 	cimg := captcha.genImage(info.Text)
