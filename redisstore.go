@@ -42,13 +42,16 @@ func CreateCaptchaRedisStore(config *StoreConfig) (StoreInterface, error) {
 	if len(pieces) == 2 {
 		db, _ = strconv.Atoi(pieces[1])
 	}
-
+	if config.DB > 0 {
+		db = config.DB
+	}
 	opt := redis.Options{}
 	opt.Addr = addr
 	opt.DB = int64(db)
 	opt.PoolSize = 0
-	stg := redis.NewTCPClient(&opt)
-
+	opt.Password = config.Password
+	opt.Network = config.NetWork
+	stg := redis.NewClient(&opt)
 	return &CaptchaRedisStore{lifeTime, stg}, nil
 }
 
