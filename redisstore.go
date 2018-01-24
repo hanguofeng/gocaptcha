@@ -49,7 +49,9 @@ func CreateCaptchaRedisStore(config *StoreConfig) (StoreInterface, error) {
 	opt.Addr = addr
 	opt.DB = int64(db)
 	opt.PoolSize = 0
-	opt.Password = config.Password
+	if (len(config.Password)>0){
+		opt.Password = config.Password
+	}
 	opt.Network = "tcp"
 	if len(config.NetWork)>0{
 		opt.Network = config.NetWork
