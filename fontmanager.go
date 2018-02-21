@@ -5,7 +5,7 @@
 package gocaptcha
 
 import (
-	"github.com/hanguofeng/freetype-go-mirror/freetype/truetype"
+	"github.com/golang/freetype/truetype"
 	"io/ioutil"
 	"math/rand"
 	"time"

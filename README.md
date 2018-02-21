@@ -54,6 +54,6 @@ gocaptcha使用[[MIT许可协议](LICENSE)]
 使用的开源软件列表，表示感谢
 
 * https://github.com/dchest/captcha
-* https://code.google.com/p/freetype-go/freetype
+* https://github.com/golang/freetype
 * https://github.com/bradfitz/gomemcache
 * https://code.google.com/p/zpix/

@@ -9,7 +9,7 @@ import (
 	"image/color"
 	"image/draw"
 
-	"github.com/hanguofeng/freetype-go-mirror/freetype"
+	"github.com/golang/freetype"
 )
 
 const (
@@ -72,8 +72,8 @@ func (m *CImage) drawString(text string) *CImage {
 	i := 0
 	for _, s := range text {
 		c.SetFont(m.config.fontManager.GetRandomFont())
-		charX := (int(c.PointToFix32(m.config.FontSize) >> 8)) * i
-		charY := int(c.PointToFix32(m.config.FontSize) >> 8)
+		charX := (int(c.PointToFixed(m.config.FontSize) >> 8)) * i
+		charY := int(c.PointToFixed(m.config.FontSize) >> 8)
 		charPt := freetype.Pt(charX, charY)
 		c.DrawString(string(s), charPt)
 		i = i + 1

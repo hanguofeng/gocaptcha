@@ -51,6 +51,6 @@ gocaptcha use [[MIT LICENSE](LICENSE)]
 Thanks:
 
 * https://github.com/dchest/captcha
-* https://code.google.com/p/freetype-go/freetype
+* https://github.com/golang/freetype
 * https://github.com/bradfitz/gomemcache
 * https://code.google.com/p/zpix/
