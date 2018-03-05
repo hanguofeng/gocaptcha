@@ -22,7 +22,7 @@ func TestMCStore(t *testing.T) {
 	retV := store.Get(key)
 
 	if retV.Text != captcha.Text {
-		t.Errorf("not equal,retV:%s,captcha:%s", retV, captcha)
+		t.Errorf("not equal,retV:%#v,captcha:%#v", retV, captcha)
 	}
 
 	retV.Text = "world"
@@ -30,10 +30,10 @@ func TestMCStore(t *testing.T) {
 	retV = store.Get(key)
 
 	if retV.Text != "world" {
-		t.Errorf("update not equal,retV:%s,captcha:%s", retV, captcha)
+		t.Errorf("update not equal,retV:%#v,captcha:%#v", retV, captcha)
 	}
 
-	t.Logf("TestMCStore:get from mc:%s", retV)
+	t.Logf("TestMCStore:get from mc:%#v", retV)
 
 	//test del
 	store.Del(key)
