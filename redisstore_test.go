@@ -14,6 +14,9 @@ func TestRedisStore(t *testing.T) {
 	storeConfig.CaptchaConfig.LifeTime = time.Second * 100
 	storeConfig.Engine = "redis"
 	storeConfig.Servers = []string{"127.0.0.1:6379"}
+	storeConfig.Password = "123456"
+	storeConfig.DB = 5
+	storeConfig.NetWork = "tcp"
 	store, _ := CreateCaptchaRedisStore(storeConfig)
 
 	captcha := new(CaptchaInfo)

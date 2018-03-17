@@ -71,4 +71,7 @@ type StoreConfig struct {
 	Servers       []string
 	GcProbability int
 	GcDivisor     int
+	Password      string
+	NetWork       string
+	DB            int
 }

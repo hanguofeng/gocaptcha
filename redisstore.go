@@ -42,13 +42,21 @@ func CreateCaptchaRedisStore(config *StoreConfig) (StoreInterface, error) {
 	if len(pieces) == 2 {
 		db, _ = strconv.Atoi(pieces[1])
 	}
-
+	if config.DB > 0 {
+		db = config.DB
+	}
 	opt := redis.Options{}
 	opt.Addr = addr
 	opt.DB = int64(db)
 	opt.PoolSize = 0
-	stg := redis.NewTCPClient(&opt)
-
+	if len(config.Password)>0{
+		opt.Password = config.Password
+	}
+	opt.Network = "tcp"
+	if len(config.NetWork)>0{
+		opt.Network = config.NetWork
+	}
+	stg := redis.NewClient(&opt)
 	return &CaptchaRedisStore{lifeTime, stg}, nil
 }
 
@@ -71,9 +79,13 @@ func (this *CaptchaRedisStore) Add(captcha *CaptchaInfo) string {
 
 	val, err := this.encodeCaptchaInfo(captcha)
 	if err == nil {
-		if seterr := this.stg.SetEx(key, this.lifeTime, string(val)); seterr != nil {
-			log.Printf("add key in redis error:%s", seterr)
+		result, error :=this.stg.SetEx(key, this.lifeTime, string(val)).Result()
+		if error != nil {
+			log.Printf("add key in redis error:%s", error)
+		}else{
+			log.Printf("add key in redis %s", result)
 		}
+
 	}
 	return key
 }
@@ -81,10 +93,12 @@ func (this *CaptchaRedisStore) Add(captcha *CaptchaInfo) string {
 func (this *CaptchaRedisStore) Update(key string, captcha *CaptchaInfo) bool {
 	val, err := this.encodeCaptchaInfo(captcha)
 	if err == nil {
-		if seterr := this.stg.Set(key, string(val)); seterr != nil {
-			log.Printf("set key in redis error:%s", seterr)
+		result, error :=this.stg.Set(key, string(val)).Result()
+		if error != nil {
+			log.Printf("set key in redis error:%s", error)
 			return false
-		} else {
+		}else{
+			log.Printf("set key in redis %s", result)
 			return true
 		}
 	} else {
