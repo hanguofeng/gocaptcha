@@ -27,7 +27,7 @@ type MCStore struct {
 	mc     *memcache.Client
 }
 
-//CreateCStore will create a new CStore
+//CreateMCStore will create a new CStore
 func CreateMCStore(expiresTime time.Duration, servers []string) *MCStore {
 	store := new(MCStore)
 
