@@ -4,7 +4,8 @@ View in [[English](README-en.md)][[中文](README.md)]
 # gocaptcha
 go语言验证码服务器
 
-[![Build Status](https://travis-ci.org/hanguofeng/gocaptcha.png?branch=master)](https://travis-ci.org/hanguofeng/gocaptcha)  [![Build Status](https://drone.io/github.com/hanguofeng/gocaptcha/status.png)](https://drone.io/github.com/hanguofeng/gocaptcha/latest)   [![Coverage Status](https://coveralls.io/repos/hanguofeng/gocaptcha/badge.png)](https://coveralls.io/r/hanguofeng/gocaptcha)   
+[![Build Status](https://travis-ci.org/hanguofeng/gocaptcha.png?branch=master)](https://travis-ci.org/hanguofeng/gocaptcha) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhanguofeng%2Fgocaptcha.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhanguofeng%2Fgocaptcha?ref=badge_shield)
+ [![Build Status](https://drone.io/github.com/hanguofeng/gocaptcha/status.png)](https://drone.io/github.com/hanguofeng/gocaptcha/latest)   [![Coverage Status](https://coveralls.io/repos/hanguofeng/gocaptcha/badge.png)](https://coveralls.io/r/hanguofeng/gocaptcha)   
 
 
 Feature
@@ -57,3 +58,7 @@ gocaptcha使用[[MIT许可协议](LICENSE)]
 * https://github.com/golang/freetype
 * https://github.com/bradfitz/gomemcache
 * https://code.google.com/p/zpix/
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhanguofeng%2Fgocaptcha.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhanguofeng%2Fgocaptcha?ref=badge_large)
