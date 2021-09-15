@@ -23,9 +23,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install memcached redis-server
-        memcached -d
-        redis-server&
-  
+        memcached -d  
   
     - name: Build
       run: go build -v ./...
